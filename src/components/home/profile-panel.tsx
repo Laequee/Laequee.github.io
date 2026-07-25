@@ -9,12 +9,12 @@ export function ProfilePanel() {
         <Reveal className="bg-bg">
           <div className="h-full px-5 py-6 sm:px-6 sm:py-7">
             <span className="annot">Education</span>
-            <h3 className="mt-3 font-display text-lg font-semibold tracking-tight">
+            <h3 className="mt-3 text-lg font-semibold tracking-tight">
               {profile.education.degree}
             </h3>
             <p className="mt-1.5 text-[15px] text-ink-soft">{profile.education.institution}</p>
             <p className="annot mt-1 normal-case tracking-[0.06em]">{profile.education.campus}</p>
-            <p className="mt-4 font-mono text-[12px] tracking-[0.08em] text-blue">
+            <p className="mt-4 font-mono text-[12px] tracking-[0.08em] text-accent">
               {profile.education.period}
             </p>
             {profile.education.note && (
@@ -32,7 +32,7 @@ export function ProfilePanel() {
                   key={language.name}
                   className="flex items-baseline justify-between gap-4 py-3 first:pt-0"
                 >
-                  <span className="font-display text-[15px] font-medium tracking-tight">
+                  <span className="text-[15px] font-medium tracking-tight">
                     {language.name}
                   </span>
                   <span className="annot text-right normal-case tracking-[0.06em]">

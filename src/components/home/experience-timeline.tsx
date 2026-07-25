@@ -25,20 +25,20 @@ export function ExperienceTimeline() {
               <span
                 aria-hidden="true"
                 className={`absolute left-0 top-1.5 hidden size-[11px] border sm:block ${
-                  role.current ? "border-blue bg-blue" : "border-rule-strong bg-bg"
+                  role.current ? "border-accent bg-accent" : "border-rule-strong bg-bg"
                 }`}
               />
 
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span className="annot">{role.period}</span>
                 {role.current && (
-                  <span className="border border-blue/40 bg-blue-wash px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-blue">
+                  <span className="border border-accent/40 bg-accent-wash px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-accent">
                     Current
                   </span>
                 )}
               </div>
 
-              <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
+              <h3 className="mt-2 text-xl font-semibold tracking-tight">
                 {role.title}
               </h3>
               <p className="mt-1 text-[15px] text-ink-soft">

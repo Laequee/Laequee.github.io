@@ -35,17 +35,17 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
     <article className="mx-auto max-w-6xl px-5 pb-20 pt-10 sm:px-8 sm:pt-14">
       <Link
         href="/#work"
-        className="sweep inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-soft transition-colors hover:text-blue"
+        className="sweep inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-soft transition-colors hover:text-accent"
       >
         <span aria-hidden="true">←</span> All work
       </Link>
 
       {/* Header */}
       <header className="mt-8 border-b border-rule pb-10">
-        <span className="font-mono text-[11px] tracking-[0.14em] text-blue">
+        <span className="font-mono text-[11px] tracking-[0.14em] text-accent">
           Fig.&nbsp;{project.index}
         </span>
-        <h1 className="mt-3 max-w-3xl font-display text-[2rem] font-semibold leading-[1.1] tracking-tight sm:text-5xl">
+        <h1 className="mt-3 max-w-3xl text-[2rem] font-semibold leading-[1.1] tracking-tight sm:text-5xl">
           {project.title}
         </h1>
         <p className="annot mt-3">{project.kind}</p>
@@ -69,7 +69,7 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
             {project.metrics.map((metric) => (
               <div key={metric.label} className="bg-bg px-5 py-6">
                 <dd
-                  className={`font-display text-3xl font-semibold tabular-nums tracking-tight ${
+                  className={`text-3xl font-semibold tabular-nums tracking-tight ${
                     metric.pending ? "text-ink-faint/50" : ""
                   }`}
                 >
@@ -93,19 +93,19 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
 
           <Reveal>
             <section className="mt-12">
-              <h2 className="font-display text-2xl font-semibold tracking-tight">Approach</h2>
+              <h2 className="text-2xl font-semibold tracking-tight">Approach</h2>
               <ol className="mt-6 border-t border-rule">
                 {project.approach.map((item, i) => (
                   <li key={item.step} className="border-b border-rule py-6">
                     <div className="flex gap-4 sm:gap-6">
-                      <span className="mt-0.5 font-mono text-[11px] tracking-[0.14em] text-blue">
+                      <span className="mt-0.5 font-mono text-[11px] tracking-[0.14em] text-accent">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <div>
-                        <h3 className="font-display text-[17px] font-semibold tracking-tight">
+                        <h3 className="text-[17px] font-semibold tracking-tight">
                           {item.step}
                         </h3>
-                        <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">
+                        <p className="prose-face mt-2 text-[15px] leading-relaxed text-ink-soft">
                           {item.detail}
                         </p>
                       </div>
@@ -118,7 +118,7 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
 
           <Reveal>
             <section className="mt-12">
-              <h2 className="font-display text-2xl font-semibold tracking-tight">Architecture</h2>
+              <h2 className="text-2xl font-semibold tracking-tight">Architecture</h2>
               <div className="mt-6">
                 <FlowDiagram diagram={project.diagram} />
               </div>
@@ -127,11 +127,11 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
 
           <Reveal>
             <section className="mt-12">
-              <h2 className="font-display text-2xl font-semibold tracking-tight">Outcome</h2>
+              <h2 className="text-2xl font-semibold tracking-tight">Outcome</h2>
               <ul className="mt-5 space-y-3">
                 {project.outcome.map((line) => (
                   <li key={line} className="flex gap-3 text-[15px] leading-relaxed text-ink-soft">
-                    <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 bg-blue" />
+                    <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 bg-accent" />
                     <span>{line}</span>
                   </li>
                 ))}
@@ -159,8 +159,8 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
             Stripped from the production build so they never reach the live site.
           */}
           {process.env.NODE_ENV === "development" && project.needs.length > 0 && (
-            <div className="mt-4 border border-amber/50 px-5 py-6">
-              <span className="annot text-amber">Still needed · dev only</span>
+            <div className="mt-4 border border-accent/50 px-5 py-6">
+              <span className="annot text-accent">Still needed · dev only</span>
               <ul className="mt-3 space-y-2">
                 {project.needs.map((need) => (
                   <li key={need} className="text-[13px] leading-relaxed text-ink-soft">
@@ -202,10 +202,11 @@ function Meta({ label, value }: { label: string; value: string }) {
 function Prose({ heading, paragraphs }: { heading: string; paragraphs: string[] }) {
   return (
     <section>
-      <h2 className="font-display text-2xl font-semibold tracking-tight">{heading}</h2>
+      <h2 className="text-2xl font-semibold tracking-tight">{heading}</h2>
       <div className="mt-5 space-y-4">
+        {/* Inter here — these run to several paragraphs and monospace tires the eye. */}
         {paragraphs.map((paragraph) => (
-          <p key={paragraph} className="text-[15px] leading-relaxed text-ink-soft">
+          <p key={paragraph} className="prose-face text-[15px] leading-relaxed text-ink-soft">
             {paragraph}
           </p>
         ))}
@@ -231,7 +232,7 @@ function NeighbourLink({
       }`}
     >
       <span className="annot">{direction}</span>
-      <p className="mt-2 font-display text-lg font-semibold tracking-tight transition-colors group-hover:text-blue">
+      <p className="mt-2 text-lg font-semibold tracking-tight transition-colors group-hover:text-accent">
         {project.title}
       </p>
       <p className="annot mt-1.5">{project.kind}</p>

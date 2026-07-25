@@ -28,14 +28,14 @@ export function Work() {
             >
               <div className="grid gap-5 lg:grid-cols-[7rem_1fr_auto] lg:items-start lg:gap-8">
                 <div className="flex items-baseline gap-3 lg:block">
-                  <span className="font-mono text-[11px] tracking-[0.14em] text-blue">
+                  <span className="font-mono text-[11px] tracking-[0.14em] text-accent">
                     {project.index}
                   </span>
                   <span className="annot lg:mt-2 lg:block">{project.period}</span>
                 </div>
 
                 <div className="max-w-2xl">
-                  <h3 className="font-display text-xl font-semibold tracking-tight transition-colors group-hover:text-blue sm:text-2xl">
+                  <h3 className="text-xl font-semibold tracking-tight transition-colors group-hover:text-accent sm:text-2xl">
                     {project.title}
                   </h3>
                   <p className="annot mt-1.5">{project.kind}</p>
@@ -65,7 +65,7 @@ export function Work() {
                     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-1 lg:gap-y-3.5">
                       {confirmed.slice(0, 2).map((metric) => (
                         <div key={metric.label} className="lg:flex lg:items-baseline lg:gap-3">
-                          <dd className="font-display text-lg font-semibold tabular-nums lg:w-20 lg:shrink-0">
+                          <dd className="text-lg font-semibold tabular-nums lg:w-20 lg:shrink-0">
                             {metric.value}
                           </dd>
                           <dt className="annot mt-0.5 lg:mt-0">{metric.label}</dt>
@@ -84,7 +84,7 @@ export function Work() {
                       </div>
                     </dl>
                   )}
-                  <span className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint transition-colors group-hover:text-blue">
+                  <span className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint transition-colors group-hover:text-accent">
                     Case study
                     <span
                       aria-hidden="true"

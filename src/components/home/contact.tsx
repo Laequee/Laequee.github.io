@@ -45,7 +45,7 @@ export function Contact() {
         <Reveal delay={80}>
           <div className="border border-rule bg-bg px-5 py-6">
             <span className="annot">Currently</span>
-            <p className="mt-3 font-display text-[15px] font-semibold leading-snug tracking-tight">
+            <p className="mt-3 text-[15px] font-semibold leading-snug tracking-tight">
               {profile.title}
             </p>
             <p className="mt-1 text-sm text-ink-soft">HCLTech · Agthia Group PJSC</p>

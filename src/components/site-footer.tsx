@@ -11,7 +11,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-display text-lg font-semibold tracking-tight">{profile.name}</p>
+            <p className="text-lg font-semibold tracking-tight">{profile.name}</p>
             <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{profile.headline}</p>
             <p className="mt-1 text-sm text-ink-faint">{profile.location}</p>
           </div>

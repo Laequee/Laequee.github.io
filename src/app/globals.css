@@ -1,44 +1,29 @@
 @import "tailwindcss";
 
-/* Class-based dark mode so the toggle overrides the OS preference. */
-@custom-variant dark (&:where(.dark, .dark *));
-
 /*
-  BLUEPRINT
-  Technical-drawing language: measured rules, figure numbering, mono annotation.
-  Light theme reads as drafting paper, dark as cyanotype.
+  NEON TERMINAL
+  Monospace-forward, near-black ground, a single cyan accent doing all the work.
+  Dark only — a light variant of a neon-on-black design fights itself, so there
+  is no theme toggle. Tokens still live here; change a value and it propagates.
 */
 
 :root {
-  --bg: #f4f6f8;
-  --surface: #ffffff;
-  --surface-2: #eaeef2;
-  --ink: #1c2733;
-  --ink-soft: #5b6b7c;
-  --ink-faint: #8d9bab;
-  --rule: #d3dae2;
-  --rule-strong: #b6c1cd;
-  --blue: #2e6bb0;
-  --blue-wash: #e4edf7;
-  --amber: #c77b24;
-  --grid: rgba(28, 39, 51, 0.055);
-  --grid-major: rgba(28, 39, 51, 0.085);
-}
+  --bg: #05070f;
+  --surface: #0b0f1c;
+  --surface-2: #121829;
+  --ink: #ffffff;
+  --ink-soft: #a8b3c7;
+  --ink-faint: #6b7891;
+  --rule: #1a2236;
+  --rule-strong: #2c3852;
 
-.dark {
-  --bg: #0f1620;
-  --surface: #161f2b;
-  --surface-2: #1c2836;
-  --ink: #e4eaf1;
-  --ink-soft: #8a9aac;
-  --ink-faint: #5f7085;
-  --rule: #223040;
-  --rule-strong: #33465b;
-  --blue: #5a9bd8;
-  --blue-wash: #16283c;
-  --amber: #e0a34e;
-  --grid: rgba(140, 180, 220, 0.05);
-  --grid-major: rgba(140, 180, 220, 0.08);
+  --accent: #00e5ff;
+  --accent-ink: #04121a;
+  --accent-wash: rgba(0, 229, 255, 0.09);
+  --accent-line: rgba(0, 229, 255, 0.35);
+  --accent-glow: rgba(0, 229, 255, 0.28);
+
+  --grid: rgba(255, 255, 255, 0.032);
 }
 
 @theme inline {
@@ -50,16 +35,18 @@
   --color-ink-faint: var(--ink-faint);
   --color-rule: var(--rule);
   --color-rule-strong: var(--rule-strong);
-  --color-blue: var(--blue);
-  --color-blue-wash: var(--blue-wash);
-  --color-amber: var(--amber);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-wash: var(--accent-wash);
+  --color-accent-line: var(--accent-line);
 
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  /* Reserved for multi-paragraph prose, where full monospace gets tiring. */
+  --font-prose: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --animate-ticker: ticker 52s linear infinite;
-  --animate-ping-slow: ping-slow 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-ring: ring-spin 22s linear infinite;
+  --animate-pulse-dot: pulse-dot 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 @keyframes ticker {
@@ -71,14 +58,23 @@
   }
 }
 
-@keyframes ping-slow {
+@keyframes ring-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-dot {
   0% {
     transform: scale(1);
-    opacity: 0.6;
+    opacity: 0.65;
   }
   75%,
   100% {
-    transform: scale(2.4);
+    transform: scale(2.6);
     opacity: 0;
   }
 }
@@ -86,24 +82,20 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Sticky nav is 3.5rem — keep anchored sections clear of it. */
     scroll-padding-top: 5.5rem;
-    color-scheme: light;
-  }
-
-  html.dark {
     color-scheme: dark;
+    background-color: var(--bg);
   }
 
   body {
     background-color: var(--bg);
     color: var(--ink);
-    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-jetbrains), ui-monospace, monospace;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+    font-variant-ligatures: none;
   }
 
-  /* Every metric and date aligns in a column; proportional digits wobble. */
+  /* Metrics and dates align in columns; proportional digits wobble. */
   .font-mono,
   th,
   td {
@@ -111,14 +103,32 @@
   }
 
   ::selection {
-    background-color: var(--blue);
-    color: #ffffff;
+    background-color: var(--accent);
+    color: var(--accent-ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--blue);
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
-    border-radius: 1px;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--rule-strong);
+    border-radius: 99px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -136,32 +146,29 @@
   }
 }
 
-/* Mono annotation, used for every label, code, and caption. */
+/* Long-form reading only — case study context, approach, outcome. */
+@utility prose-face {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Small uppercase mono annotation, used for every label and caption. */
 @utility annot {
-  font-family: var(--font-jetbrains), ui-monospace, monospace;
   font-size: 0.6875rem;
-  line-height: 1.2;
-  letter-spacing: 0.14em;
+  line-height: 1.25;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink-faint);
 }
 
-/* Graph-paper field. Reads as the sheet the page is drawn on. */
-@utility blueprint-grid {
+/* Faint graph paper. Fixed, so the page scrolls across it. */
+@utility neon-grid {
   background-image:
-    linear-gradient(var(--grid-major) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
     linear-gradient(var(--grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size:
-    96px 96px,
-    96px 96px,
-    12px 12px,
-    12px 12px;
-  background-position: -1px -1px;
+  background-size: 64px 64px;
 }
 
-/* Underline sweeping in from the left — the only link hover in the system. */
+/* Underline sweeping in from the left — the standard link hover. */
 @utility sweep {
   background-image: linear-gradient(currentColor, currentColor);
   background-repeat: no-repeat;
@@ -175,37 +182,23 @@
   }
 }
 
-/* Corner registration marks, as on a printed plate. */
-@utility reg-marks {
-  position: relative;
+/* Accent-outlined pill: CV button, social circles, tags. */
+@utility neon-outline {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 
-  &::before,
-  &::after {
-    content: "";
-    position: absolute;
-    width: 9px;
-    height: 9px;
-    border-color: var(--rule-strong);
-    transition: border-color 0.3s;
-    pointer-events: none;
+  &:hover,
+  &:focus-visible {
+    background-color: var(--accent);
+    color: var(--accent-ink);
+    box-shadow: 0 0 24px var(--accent-glow);
   }
+}
 
-  &::before {
-    top: -1px;
-    left: -1px;
-    border-top: 1px solid;
-    border-left: 1px solid;
-  }
-
-  &::after {
-    right: -1px;
-    bottom: -1px;
-    border-right: 1px solid;
-    border-bottom: 1px solid;
-  }
-
-  &:hover::before,
-  &:hover::after {
-    border-color: var(--blue);
-  }
+@utility glow {
+  box-shadow: 0 0 40px var(--accent-glow);
 }

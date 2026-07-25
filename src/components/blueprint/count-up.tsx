@@ -10,8 +10,8 @@ type CountUpProps = {
 
 /**
  * Counts a metric up once, the first time it scrolls into view.
- * Renders the final value immediately for reduced-motion users, and the
- * markup always contains the real number so it is correct pre-hydration.
+ * Renders the final value for reduced-motion users, and the markup always
+ * contains the real number so it is correct before hydration.
  */
 export function CountUp({ value, suffix = "", durationMs = 1100 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);

@@ -18,12 +18,12 @@ export function Certifications() {
               <div className="flex items-start justify-between gap-3">
                 <span className="annot">{cert.issuer.split(" — ")[0]}</span>
                 {cert.code && (
-                  <span className="border border-rule px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] text-blue">
+                  <span className="border border-rule px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] text-accent">
                     {cert.code}
                   </span>
                 )}
               </div>
-              <h3 className="mt-3 font-display text-[15px] font-semibold leading-snug tracking-tight">
+              <h3 className="mt-3 text-[15px] font-semibold leading-snug tracking-tight">
                 {cert.name}
               </h3>
               {/*
@@ -34,7 +34,7 @@ export function Certifications() {
                 <p className="annot mt-auto pt-4 normal-case tracking-[0.06em]">
                   {cert.issued}
                   {cert.credentialUrl && (
-                    <span className={cert.issued ? "ml-2 text-blue" : "text-blue"}>Verify →</span>
+                    <span className={cert.issued ? "ml-2 text-accent" : "text-accent"}>Verify →</span>
                   )}
                 </p>
               )}

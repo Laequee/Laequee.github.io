@@ -1,25 +1,20 @@
 import type { Metadata } from "next";
-import { Archivo, Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
-const archivo = Archivo({
-  variable: "--font-archivo",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
 const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/* Prose only — long case-study paragraphs, where full monospace gets tiring. */
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
@@ -54,33 +49,25 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-/**
- * Applies the stored theme before first paint. Inlined deliberately — anything
- * async here would show a flash of the wrong background on load.
- */
-const themeScript = `
-try {
-  var stored = localStorage.getItem('theme');
-  var dark = stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-  document.documentElement.classList.toggle('dark', dark);
-} catch (e) {}
-`;
+export const viewport = {
+  themeColor: "#05070f",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${archivo.variable} ${inter.variable} ${jetbrains.variable} h-full antialiased`}
-    >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body className="relative flex min-h-full flex-col">
-        {/* The drawing sheet. Fixed, non-interactive, sits behind everything. */}
-        <div aria-hidden="true" className="blueprint-grid pointer-events-none fixed inset-0 -z-10" />
+    <html lang="en" className={`${jetbrains.variable} ${inter.variable} h-full`}>
+      <body className="relative flex min-h-full flex-col antialiased">
+        {/* Grid field, masked so it fades away from the edges. */}
+        <div
+          aria-hidden="true"
+          className="neon-grid pointer-events-none fixed inset-0 -z-10"
+          style={{
+            maskImage: "radial-gradient(ellipse at 50% 0%, #000 10%, transparent 80%)",
+            WebkitMaskImage: "radial-gradient(ellipse at 50% 0%, #000 10%, transparent 80%)",
+          }}
+        />
         <SiteNav />
         <main className="flex-1">{children}</main>
         <SiteFooter />

@@ -1,12 +1,10 @@
 /**
- * Drawing furniture: dimension lines and figure labels.
- * These carry the blueprint language and appear on every section.
+ * Section furniture: the numbered heading frame and a divider rule.
+ * The index number is set in the accent and doubles as the section marker,
+ * so long scrolls stay orientable.
  */
 
-/**
- * A measured rule with tick ends, as on a dimension callout.
- * Optionally carries a label centred on the line.
- */
+/** Thin divider with an accent tick at each end. */
 export function DimensionLine({ label }: { label?: string }) {
   return (
     <div className="flex items-center gap-3" aria-hidden="true">
@@ -24,16 +22,7 @@ export function DimensionLine({ label }: { label?: string }) {
 }
 
 function Tick() {
-  return <span className="h-2 w-px shrink-0 bg-rule-strong" />;
-}
-
-/** `FIG. 01` marker used in the section margin. */
-export function FigLabel({ index, className = "" }: { index: string; className?: string }) {
-  return (
-    <span className={`annot shrink-0 ${className}`}>
-      Fig.&nbsp;{index}
-    </span>
-  );
+  return <span className="h-1.5 w-px shrink-0 bg-accent/60" />;
 }
 
 type SectionProps = {
@@ -42,33 +31,33 @@ type SectionProps = {
   id?: string;
   lede?: string;
   children: React.ReactNode;
-  /** Renders on the alternate surface colour, to break up long scrolls. */
+  /** Renders on the raised surface, to break up long scrolls. */
   raised?: boolean;
 };
 
-/**
- * Standard section frame: figure number in the margin, title, optional lede.
- * The margin collapses under `lg` — on narrow screens the label sits above.
- */
 export function Section({ index, title, id, lede, children, raised }: SectionProps) {
   return (
     <section
       id={id}
-      className={`scroll-mt-24 border-t border-rule py-16 sm:py-24 ${raised ? "bg-surface/60" : ""}`}
+      className={`scroll-mt-24 border-t border-rule py-16 sm:py-24 ${raised ? "bg-surface/40" : ""}`}
     >
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <div className="mb-10 sm:mb-14 lg:flex lg:gap-12">
-          <div className="lg:w-32 lg:shrink-0 lg:pt-2">
-            <FigLabel index={index} />
-          </div>
-          <div className="mt-3 max-w-2xl lg:mt-0">
-            <h2 className="font-display text-[1.75rem] font-semibold leading-tight tracking-tight sm:text-4xl">
-              {title}
-            </h2>
-            {lede && (
-              <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{lede}</p>
-            )}
-          </div>
+        <div className="mb-10 sm:mb-14">
+          <p className="mb-4 flex items-center gap-3">
+            <span className="text-[11px] font-semibold tracking-[0.18em] text-accent">{index}</span>
+            <span className="h-px w-10 bg-accent/40" aria-hidden="true" />
+          </p>
+          <h2 className="text-[1.75rem] font-bold leading-tight tracking-tight sm:text-4xl">
+            {title}
+          </h2>
+          {/*
+            Mono, not prose-face. A sans lede sitting among monospace headings
+            reads as a mistake — Inter is reserved for the multi-paragraph
+            case-study body, where full monospace genuinely tires the eye.
+          */}
+          {lede && (
+            <p className="mt-4 max-w-2xl text-[13.5px] leading-relaxed text-ink-soft">{lede}</p>
+          )}
         </div>
         {children}
       </div>

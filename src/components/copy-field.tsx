@@ -37,7 +37,7 @@ export function CopyField({ label, value, href }: CopyFieldProps) {
         <span className="annot">{label}</span>
         <a
           href={href}
-          className="sweep mt-1.5 block w-fit max-w-full break-all font-display text-lg font-medium tracking-tight transition-colors hover:text-blue sm:text-xl"
+          className="sweep mt-1.5 block w-fit max-w-full break-all text-lg font-medium tracking-tight transition-colors hover:text-accent sm:text-xl"
         >
           {value}
         </a>
@@ -46,7 +46,7 @@ export function CopyField({ label, value, href }: CopyFieldProps) {
         type="button"
         onClick={copy}
         aria-label={`Copy ${label.toLowerCase()}`}
-        className="shrink-0 border border-rule px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint transition-colors hover:border-blue hover:text-blue"
+        className="shrink-0 border border-rule px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint transition-colors hover:border-accent hover:text-accent"
       >
         {copied ? "Copied" : "Copy"}
       </button>

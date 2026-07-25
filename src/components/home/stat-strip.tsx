@@ -9,7 +9,7 @@ export function StatStrip() {
         {headlineStats.map((stat, i) => (
           <Reveal key={stat.label} delay={i * 70} className="bg-bg">
             <div className="h-full px-5 py-6 sm:px-6 sm:py-7">
-              <dd className="font-display text-3xl font-semibold tracking-tight tabular-nums sm:text-4xl">
+              <dd className="text-3xl font-semibold tracking-tight tabular-nums sm:text-4xl">
                 <CountUp value={stat.value} suffix={stat.suffix} />
               </dd>
               <dt className="mt-2 text-[13px] leading-snug text-ink-soft">{stat.label}</dt>

@@ -9,7 +9,7 @@ import type { Project } from "@/content/projects";
 export function FlowDiagram({ diagram }: { diagram: Project["diagram"] }) {
   return (
     <figure className="border border-rule bg-surface/60">
-      <div className="blueprint-grid px-4 py-8 sm:px-8 sm:py-10">
+      <div className="neon-grid px-4 py-8 sm:px-8 sm:py-10">
         <div className="mx-auto flex max-w-3xl flex-col items-stretch">
           {diagram.layers.map((layer, layerIndex) => (
             <div key={layer.label}>

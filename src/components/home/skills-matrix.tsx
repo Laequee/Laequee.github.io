@@ -15,10 +15,10 @@ export function SkillsMatrix() {
           <Reveal key={group.code} delay={Math.min(i, 4) * 50} className="bg-bg">
             <div className="h-full px-5 py-6">
               <div className="flex items-baseline gap-2.5">
-                <span className="font-mono text-[11px] tracking-[0.14em] text-blue">
+                <span className="font-mono text-[11px] tracking-[0.14em] text-accent">
                   {group.code}
                 </span>
-                <h3 className="font-display text-[15px] font-semibold leading-tight tracking-tight">
+                <h3 className="text-[15px] font-semibold leading-tight tracking-tight">
                   {group.title}
                 </h3>
               </div>
