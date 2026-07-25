@@ -17,7 +17,10 @@ export function Work() {
       lede="Migration and consolidation programmes across identity, endpoint, and collaboration. Each entry opens a full case study."
     >
       <ul className="border-t border-rule">
-        {projects.map((project, i) => (
+        {projects.map((project, i) => {
+          const confirmed = project.metrics.filter((metric) => !metric.pending);
+
+          return (
           <Reveal as="li" key={project.slug} delay={Math.min(i, 5) * 50}>
             <Link
               href={`/projects/${project.slug}`}
@@ -52,11 +55,15 @@ export function Work() {
                 </div>
 
                 <div className="lg:w-56">
-                  <dl className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-1 lg:gap-y-3.5">
-                    {project.metrics
-                      .filter((metric) => !metric.pending)
-                      .slice(0, 2)
-                      .map((metric) => (
+                  {/*
+                    Unconfirmed metrics are never shown on the index — a dash here reads
+                    as a broken row rather than an honest gap. Projects with nothing
+                    confirmed yet fall back to role and client so the column still
+                    carries weight instead of sitting empty.
+                  */}
+                  {confirmed.length > 0 ? (
+                    <dl className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-1 lg:gap-y-3.5">
+                      {confirmed.slice(0, 2).map((metric) => (
                         <div key={metric.label} className="lg:flex lg:items-baseline lg:gap-3">
                           <dd className="font-display text-lg font-semibold tabular-nums lg:w-20 lg:shrink-0">
                             {metric.value}
@@ -64,7 +71,19 @@ export function Work() {
                           <dt className="annot mt-0.5 lg:mt-0">{metric.label}</dt>
                         </div>
                       ))}
-                  </dl>
+                    </dl>
+                  ) : (
+                    <dl className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-1 lg:gap-y-3.5">
+                      <div>
+                        <dt className="annot">Role</dt>
+                        <dd className="mt-1 text-[14px] text-ink-soft">{project.role}</dd>
+                      </div>
+                      <div>
+                        <dt className="annot">Client</dt>
+                        <dd className="mt-1 text-[14px] text-ink-soft">{project.client}</dd>
+                      </div>
+                    </dl>
+                  )}
                   <span className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint transition-colors group-hover:text-blue">
                     Case study
                     <span
@@ -78,7 +97,8 @@ export function Work() {
               </div>
             </Link>
           </Reveal>
-        ))}
+          );
+        })}
       </ul>
     </Section>
   );
