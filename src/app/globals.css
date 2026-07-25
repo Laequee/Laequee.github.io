@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+/* Class-based dark mode so the toggle overrides the OS preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  BLUEPRINT
+  Technical-drawing language: measured rules, figure numbering, mono annotation.
+  Light theme reads as drafting paper, dark as cyanotype.
+*/
+
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --surface-2: #eaeef2;
+  --ink: #1c2733;
+  --ink-soft: #5b6b7c;
+  --ink-faint: #8d9bab;
+  --rule: #d3dae2;
+  --rule-strong: #b6c1cd;
+  --blue: #2e6bb0;
+  --blue-wash: #e4edf7;
+  --amber: #c77b24;
+  --grid: rgba(28, 39, 51, 0.055);
+  --grid-major: rgba(28, 39, 51, 0.085);
+}
+
+.dark {
+  --bg: #0f1620;
+  --surface: #161f2b;
+  --surface-2: #1c2836;
+  --ink: #e4eaf1;
+  --ink-soft: #8a9aac;
+  --ink-faint: #5f7085;
+  --rule: #223040;
+  --rule-strong: #33465b;
+  --blue: #5a9bd8;
+  --blue-wash: #16283c;
+  --amber: #e0a34e;
+  --grid: rgba(140, 180, 220, 0.05);
+  --grid-major: rgba(140, 180, 220, 0.08);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-blue: var(--blue);
+  --color-blue-wash: var(--blue-wash);
+  --color-amber: var(--amber);
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --animate-ticker: ticker 52s linear infinite;
+  --animate-ping-slow: ping-slow 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  75%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Sticky nav is 3.5rem — keep anchored sections clear of it. */
+    scroll-padding-top: 5.5rem;
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Every metric and date aligns in a column; proportional digits wobble. */
+  .font-mono,
+  th,
+  td {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background-color: var(--blue);
+    color: #ffffff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Mono annotation, used for every label, code, and caption. */
+@utility annot {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Graph-paper field. Reads as the sheet the page is drawn on. */
+@utility blueprint-grid {
+  background-image:
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:
+    96px 96px,
+    96px 96px,
+    12px 12px,
+    12px 12px;
+  background-position: -1px -1px;
+}
+
+/* Underline sweeping in from the left — the only link hover in the system. */
+@utility sweep {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* Corner registration marks, as on a printed plate. */
+@utility reg-marks {
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-color: var(--rule-strong);
+    transition: border-color 0.3s;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+  }
+
+  &::after {
+    right: -1px;
+    bottom: -1px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+  }
+
+  &:hover::before,
+  &:hover::after {
+    border-color: var(--blue);
+  }
+}
