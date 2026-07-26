@@ -90,7 +90,7 @@ export function AvatarRing() {
 function Face({ src, rotated }: { src: string; rotated: boolean }) {
   return (
     <span
-      className="glow absolute inset-0 overflow-hidden rounded-full border border-rule-strong bg-surface"
+      className="era-portrait glow absolute inset-0 overflow-hidden rounded-full border border-rule-strong bg-surface"
       style={{
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
