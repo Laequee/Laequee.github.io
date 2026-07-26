@@ -3,6 +3,21 @@
  * Sourced from linkedin.com/in/laeque and the previous portfolio.
  */
 
+/** First professional role: System Engineer at EYS IT Solutions, October 2020. */
+const CAREER_START = Date.UTC(2020, 9, 1);
+
+/**
+ * Experience in whole years, derived rather than written down.
+ *
+ * This was hardcoded as "4" and was wrong by nearly two years — the figure came
+ * from a LinkedIn summary written long before, and nobody remembers to bump a
+ * literal. Computed at build time and floored, so the claim is always current
+ * and never rounds up. Every deploy refreshes it.
+ */
+export const yearsExperience = Math.floor(
+  (Date.now() - CAREER_START) / (365.25 * 24 * 60 * 60 * 1000),
+);
+
 export const profile = {
   name: "Mohammed Laeque",
   initials: "ML",
@@ -14,8 +29,7 @@ export const profile = {
   intro:
     "I build and consolidate the identity, endpoint, and collaboration layers that large organisations run on — tenant migrations, Active Directory consolidation, Intune at scale, and the Zero Trust controls that hold it together.",
 
-  summary:
-    "Four years delivering enterprise-scale cloud, endpoint, and hybrid identity work across multi-tenant environments. Most of it is migration and consolidation: moving thousands of endpoints between security tenants without downtime, collapsing legacy domains into a single directory, and taking file servers into SharePoint Online for business units that had never left the shared drive.",
+  summary: `${yearsExperience}+ years delivering enterprise-scale cloud, endpoint, and hybrid identity work across multi-tenant environments. Most of it is migration and consolidation: moving thousands of endpoints between security tenants without downtime, collapsing legacy domains into a single directory, and taking file servers into SharePoint Online for business units that had never left the shared drive.`,
 
   availability: {
     open: true,
@@ -65,7 +79,7 @@ export const profile = {
  * can run on the numeral alone.
  */
 export const headlineStats = [
-  { value: 4, suffix: "+", label: "Years in enterprise IT", note: "Since 2020" },
+  { value: yearsExperience, suffix: "+", label: "Years in enterprise IT", note: "Since Oct 2020" },
   { value: 4500, suffix: "+", label: "Endpoints secured", note: "CrowdStrike migration" },
   { value: 2000, suffix: "+", label: "Devices under Intune", note: "Autopilot · compliance" },
   { value: 14, suffix: "+", label: "Business units served", note: "Current engagement" },

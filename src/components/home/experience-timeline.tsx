@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/blueprint/reveal";
 import { Section } from "@/components/blueprint/rules";
 import { experience } from "@/content/experience";
+import { yearsExperience } from "@/content/profile";
 
 export function ExperienceTimeline() {
   return (
@@ -8,7 +9,7 @@ export function ExperienceTimeline() {
       index="02"
       id="experience"
       title="Experience"
-      lede="Four years across enterprise IT, from workstation builds in Kerala to group-wide cloud transformation in Abu Dhabi."
+      lede={`${yearsExperience}+ years across enterprise IT, from workstation builds in Kerala to group-wide cloud transformation in Abu Dhabi.`}
       raised
     >
       <ol className="relative">
