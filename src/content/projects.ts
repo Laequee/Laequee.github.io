@@ -256,7 +256,7 @@ export const projects: Project[] = [
     role: "Migration engineer",
     featured: true,
     summary:
-      "Moved multi-terabyte file servers into SharePoint Online across five business units — Head Office, Grand Mills, Atyab, Abu Auf, and Riviere — rebuilding permission models on the way.",
+      "Moved multi-terabyte file servers into SharePoint Online across five business units — head office plus four operating companies — rebuilding permission models on the way.",
     metrics: [
       { value: "5", label: "Business units migrated" },
       { value: "—", label: "Terabytes moved", pending: true },
@@ -298,7 +298,8 @@ export const projects: Project[] = [
     diagram: {
       caption: "On-premises shares to SharePoint document libraries",
       layers: [
-        { label: "Source", nodes: ["HO", "Grand Mills", "Atyab", "Abu Auf", "Riviere"] },
+        // Named units would re-identify the client the labels deliberately omit.
+        { label: "Source", nodes: ["Head office", "BU 02", "BU 03", "BU 04", "BU 05"] },
         { label: "Process", nodes: ["Assessment", "Permission redesign", "Bulk + delta"] },
         { label: "Target", nodes: ["SharePoint Online", "OneDrive sync", "Teams"] },
       ],

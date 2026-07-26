@@ -44,7 +44,7 @@ export const experience: Role[] = [
       "Led the Active Directory consolidation programme, decommissioning legacy domain controllers and executing cross-domain user migration.",
       "Upgraded Azure AD Connect, including a source anchor transition, without breaking hybrid identity.",
       "Delivered Microsoft 365 tenant-to-tenant migrations, onboarding newly acquired entities into the corporate tenant and domain.",
-      "Migrated multi-terabyte file servers to SharePoint Online for Head Office, Grand Mills, Atyab, Abu Auf, and Riviere.",
+      "Migrated multi-terabyte file servers to SharePoint Online for head office and four operating companies.",
       "Implemented Conditional Access, MFA, Defender for Endpoint, and Purview controls; raised Secure Score.",
       "Administered Veeam backup, restore, and disaster recovery readiness; supported VMware vCenter workloads.",
       "Optimised E3/E5 and Adobe licensing, cutting recurring spend.",
