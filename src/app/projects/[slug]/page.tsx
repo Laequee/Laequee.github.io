@@ -37,7 +37,7 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
         href="/#work"
         className="sweep inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-soft transition-colors hover:text-accent"
       >
-        <span aria-hidden="true">←</span> All work
+        <span aria-hidden="true">←</span> All projects
       </Link>
 
       {/* Header */}

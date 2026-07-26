@@ -8,7 +8,8 @@ import { profile } from "@/content/profile";
 
 /* Absolute hrefs so these still resolve from a /projects/<slug>/ page. */
 const links = [
-  { href: "/#work", label: "Work" },
+  /* Anchor stays #work — renaming it would break links already shared. */
+  { href: "/#work", label: "Projects" },
   { href: "/#experience", label: "Experience" },
   { href: "/#stack", label: "Stack" },
   { href: "/#contact", label: "Contact" },

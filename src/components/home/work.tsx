@@ -14,7 +14,7 @@ export function Work() {
       index="01"
       id="work"
       title="Enterprise Projects"
-      lede="Enterprise engineering projects spanning cloud identity, endpoint management, infrastructure modernization, security, automation, and large-scale migration initiatives."
+      lede="Enterprise engineering projects spanning cloud identity, endpoint management, infrastructure modernisation, security, automation, and large-scale migration initiatives."
     >
       <ul className="border-t border-rule">
         {projects.map((project, i) => {
