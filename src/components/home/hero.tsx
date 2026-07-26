@@ -10,17 +10,22 @@ const socials = [
 ];
 
 /*
- * "Cloud, Identity & Endpoint Engineering" split so the accent lands on the
- * second line. Hardcoded rather than derived — the break point is a typographic
- * judgement about balancing two lines, not something a split() rule gets right.
+ * The headline, broken by hand. A split() rule cannot make a typographic
+ * judgement, and letting it wrap on its own orphans the ampersand.
  *
- * The two lines are 17 and 20 monospace characters. At the xl size they need
- * roughly 510px and 600px; the left column is ~648px once the portrait is
- * 400px wide. Shrinking the type or widening that column any further is what
- * keeps the ampersand from orphaning onto a line of its own.
+ * These three lines are 21, 20 and 20 monospace characters — near enough
+ * identical that the block sets as a clean rectangle. At 2.9rem they need
+ * about 585px; the left column is ~648px with the portrait at 400px. Change
+ * the wording and this arithmetic needs redoing.
+ *
+ * Only the last line takes the accent, so the phrase still resolves on its
+ * closing words.
  */
-const headlineLead = "Cloud, Identity &";
-const headlineTail = "Endpoint Engineering";
+const headlineLines = [
+  { text: "Microsoft 365, Cloud,", accent: false },
+  { text: "Identity, Security &", accent: false },
+  { text: "Endpoint Engineering", accent: true },
+];
 
 export function Hero() {
   return (
@@ -87,10 +92,16 @@ export function Hero() {
                   delayed slightly so the sweep travels down.
                 */}
                 <span className="group mt-3 block cursor-default">
-                  <HeadlineLine>{headlineLead}</HeadlineLine>
-                  <HeadlineLine accent delay="delay-100">
-                    {headlineTail}
-                  </HeadlineLine>
+                  {headlineLines.map((line, i) => (
+                    <HeadlineLine
+                      key={line.text}
+                      accent={line.accent}
+                      /* Staggered so the sweep travels down the phrase. */
+                      delay={["", "delay-75", "delay-150"][i]}
+                    >
+                      {line.text}
+                    </HeadlineLine>
+                  ))}
                 </span>
               </h1>
             </Reveal>
@@ -162,7 +173,7 @@ function HeadlineLine({
   return (
     <span className="relative inline-block overflow-hidden align-top">
       <span
-        className={`relative z-10 block px-1 text-[2.2rem] font-bold leading-[1.06] transition-colors duration-500 group-hover:text-accent-ink sm:text-5xl xl:text-[3.1rem] ${
+        className={`relative z-10 block px-1 text-[1.9rem] font-bold leading-[1.08] transition-colors duration-500 group-hover:text-accent-ink sm:text-[2.6rem] xl:text-[2.9rem] ${
           accent ? "text-accent" : "text-ink"
         }`}
       >

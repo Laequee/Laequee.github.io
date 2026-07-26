@@ -21,8 +21,8 @@ export const yearsExperience = Math.floor(
 export const profile = {
   name: "Mohammed Laeque",
   initials: "ML",
-  title: "IT Specialist",
-  headline: "Cloud, Identity & Endpoint Engineering",
+  title: "Cloud, Identity & Security Engineer",
+  headline: "Microsoft 365, Cloud, Identity, Security & Endpoint Engineering",
   discipline: "Microsoft 365 · Entra ID · Intune · Security & Infrastructure",
   location: "Al Zahiyah, Abu Dhabi, UAE",
 

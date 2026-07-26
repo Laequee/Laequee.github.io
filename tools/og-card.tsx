@@ -81,10 +81,14 @@ export default async function OpenGraphImage() {
               </span>
             </div>
 
-            <span style={{ fontSize: 62, fontWeight: 700, color: INK, marginTop: 26 }}>
-              Cloud, Identity &amp;
+            {/* Same hand-broken lines as the hero, at a size that clears the ring. */}
+            <span style={{ fontSize: 48, fontWeight: 700, color: INK, marginTop: 22 }}>
+              Microsoft 365, Cloud,
             </span>
-            <span style={{ fontSize: 62, fontWeight: 700, color: ACCENT, marginTop: 4 }}>
+            <span style={{ fontSize: 48, fontWeight: 700, color: INK, marginTop: 2 }}>
+              Identity, Security &amp;
+            </span>
+            <span style={{ fontSize: 48, fontWeight: 700, color: ACCENT, marginTop: 2 }}>
               Endpoint Engineering
             </span>
           </div>
