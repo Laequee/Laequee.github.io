@@ -82,14 +82,14 @@ export default async function OpenGraphImage() {
             </div>
 
             {/* Same hand-broken lines as the hero, at a size that clears the ring. */}
-            <span style={{ fontSize: 48, fontWeight: 700, color: INK, marginTop: 22 }}>
-              Microsoft 365, Cloud,
+            <span style={{ fontSize: 54, fontWeight: 700, color: INK, marginTop: 22 }}>
+              Enterprise Cloud
             </span>
-            <span style={{ fontSize: 48, fontWeight: 700, color: INK, marginTop: 2 }}>
-              Identity, Security &amp;
+            <span style={{ fontSize: 54, fontWeight: 700, color: ACCENT, marginTop: 2 }}>
+              Identity &amp; Endpoint
             </span>
-            <span style={{ fontSize: 48, fontWeight: 700, color: ACCENT, marginTop: 2 }}>
-              Endpoint Engineering
+            <span style={{ fontSize: 54, fontWeight: 700, color: ACCENT, marginTop: 2 }}>
+              Engineering
             </span>
           </div>
 
@@ -121,8 +121,18 @@ export default async function OpenGraphImage() {
             a row with four stat labels overflowed the card and clipped it at the
             right edge — there is no room for a fifth column at this width.
           */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-            <span style={{ fontSize: 22, color: INK_SOFT }}>{profile.discipline}</span>
+          {/*
+            The same two lines the hero uses. As one string it overflowed the
+            space left by the URL sharing this row and orphaned "Azure".
+          */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {profile.disciplineLines.map((line) => (
+                <span key={line} style={{ fontSize: 21, color: INK_SOFT, lineHeight: 1.5 }}>
+                  {line}
+                </span>
+              ))}
+            </div>
             <span style={{ fontSize: 20, color: ACCENT }}>laequee.github.io</span>
           </div>
 

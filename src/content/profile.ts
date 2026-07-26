@@ -22,8 +22,14 @@ export const profile = {
   name: "Mohammed Laeque",
   initials: "ML",
   title: "Cloud, Identity & Security Engineer",
-  headline: "Microsoft 365, Cloud, Identity, Security & Endpoint Engineering",
-  discipline: "Microsoft 365 · Entra ID · Intune · Security & Infrastructure",
+  headline: "Enterprise Cloud, Identity & Endpoint Engineering",
+  /* Single line, for the share card and metadata where wrapping isn't available. */
+  discipline: "Identity · Endpoint Management · Security · Automation · Microsoft 365 · Azure",
+  /* Hand-broken for the hero, where two balanced lines read better than one long one. */
+  disciplineLines: [
+    "Identity · Endpoint Management · Security",
+    "Automation · Microsoft 365 · Azure",
+  ],
   location: "Al Zahiyah, Abu Dhabi, UAE",
 
   intro:

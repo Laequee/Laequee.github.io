@@ -13,18 +13,18 @@ const socials = [
  * The headline, broken by hand. A split() rule cannot make a typographic
  * judgement, and letting it wrap on its own orphans the ampersand.
  *
- * These three lines are 21, 20 and 20 monospace characters — near enough
- * identical that the block sets as a clean rectangle. At 2.9rem they need
- * about 585px; the left column is ~648px with the portrait at 400px. Change
- * the wording and this arithmetic needs redoing.
+ * Longest line is 19 monospace characters, so at 3.2rem it needs about 584px
+ * against a ~648px column with the portrait at 400px. Mobile is capped at
+ * 1.75rem for the same reason — 19 characters is what sets the ceiling.
+ * Change the wording and this arithmetic needs redoing.
  *
- * Only the last line takes the accent, so the phrase still resolves on its
- * closing words.
+ * "Enterprise Cloud" stays in ink as the qualifier; the specialism it
+ * qualifies carries the accent across both remaining lines.
  */
 const headlineLines = [
-  { text: "Microsoft 365, Cloud,", accent: false },
-  { text: "Identity, Security &", accent: false },
-  { text: "Endpoint Engineering", accent: true },
+  { text: "Enterprise Cloud", accent: false },
+  { text: "Identity & Endpoint", accent: true },
+  { text: "Engineering", accent: true },
 ];
 
 export function Hero() {
@@ -107,9 +107,18 @@ export function Hero() {
             </Reveal>
 
             <Reveal delay={120}>
-              <p className="mx-auto mt-7 max-w-[34rem] text-[13.5px] leading-relaxed text-ink-soft sm:text-[15px] xl:mx-0">
-                {profile.discipline} | {profile.location}
-              </p>
+              {/*
+                Two hand-broken lines rather than one wrapping paragraph, so the
+                grouping is deliberate instead of whatever the column width
+                happens to produce. Location is omitted here — it already
+                appears in the availability line below, the contact panel, and
+                the footer.
+              */}
+              <div className="mt-7 text-[13.5px] leading-relaxed text-ink-soft sm:text-[15px]">
+                {profile.disciplineLines.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
+              </div>
             </Reveal>
 
             <Reveal delay={180}>
@@ -173,7 +182,7 @@ function HeadlineLine({
   return (
     <span className="relative inline-block overflow-hidden align-top">
       <span
-        className={`relative z-10 block px-1 text-[1.9rem] font-bold leading-[1.08] transition-colors duration-500 group-hover:text-accent-ink sm:text-[2.6rem] xl:text-[2.9rem] ${
+        className={`relative z-10 block px-1 text-[1.75rem] font-bold leading-[1.08] transition-colors duration-500 group-hover:text-accent-ink sm:text-[2.6rem] xl:text-[3.2rem] ${
           accent ? "text-accent" : "text-ink"
         }`}
       >
