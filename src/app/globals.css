@@ -92,6 +92,60 @@
   }
 }
 
+/*
+  Soft-body wobble, modelled on Jelly UI's own entrance sequence
+  (scale 0.92,0.96 → 1.014,0.997 → 0.998,1.002 → 1, 420ms,
+  cubic-bezier(.16,.82,.28,1)).
+
+  The point is that X and Y move in OPPOSITION — wide when flat, narrow when
+  tall. That volume-preserving trade is what reads as a bubble; scaling both
+  axes together just reads as a zoom, which is why the transition-based
+  version felt wrong however hard it sprang. A transition interpolates one
+  value and cannot oscillate, so this has to be keyframes.
+
+  Amplitudes here are larger than theirs — their sequence is an entrance on a
+  whole dialog, this is a small pill that needs the motion to register.
+*/
+@keyframes jelly-bubble {
+  0% {
+    transform: translateY(0) scale(1, 1);
+  }
+  28% {
+    transform: translateY(-6px) scale(1.11, 0.94);
+  }
+  52% {
+    transform: translateY(-2px) scale(0.98, 1.08);
+  }
+  72% {
+    transform: translateY(-4px) scale(1.07, 1.01);
+  }
+  88% {
+    transform: translateY(-3px) scale(1.02, 1.06);
+  }
+  100% {
+    transform: translateY(-3px) scale(1.05, 1.05);
+  }
+}
+
+/* Shorter, tighter — fires when the pointer actually reaches the pill. */
+@keyframes jelly-bubble-near {
+  0% {
+    transform: translateY(-3px) scale(1.05, 1.05);
+  }
+  35% {
+    transform: translateY(-7px) scale(1.13, 0.96);
+  }
+  65% {
+    transform: translateY(-3px) scale(1.02, 1.11);
+  }
+  85% {
+    transform: translateY(-5px) scale(1.09, 1.05);
+  }
+  100% {
+    transform: translateY(-4px) scale(1.07, 1.07);
+  }
+}
+
 @keyframes pulse-dot {
   0% {
     transform: scale(1);
@@ -267,16 +321,17 @@
     background-image: none;
     color: var(--accent-ink);
     border-color: var(--accent);
-    transform: translateY(-3px) scale(1.05);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.35),
       0 12px 28px -10px var(--accent-glow),
       0 0 24px var(--accent-glow);
+    animation: jelly-bubble 0.52s cubic-bezier(0.16, 0.82, 0.28, 1) forwards;
   }
 
   &:active {
-    /* Wide and flat, and fast — a press has to land before it can rebound. */
-    transform: translateY(2px) scaleX(1.11) scaleY(0.86);
+    /* The press must beat the wobble, so it cancels the animation outright. */
+    animation: none;
+    transform: translateY(2px) scaleX(1.13) scaleY(0.84);
     transition-duration: 0.07s;
     transition-timing-function: ease-out;
   }
@@ -307,36 +362,36 @@
     box-shadow 0.3s,
     border-color 0.22s;
 
-  /* Anywhere on the row wakes the button. */
+  /* Anywhere on the row wakes the button, and it bubbles once on arrival. */
   .group:hover &,
   .group:focus-visible & {
     background-color: var(--accent);
     background-image: none;
     color: var(--accent-ink);
     border-color: var(--accent);
-    transform: translateY(-2px) scale(1.03);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.35),
       0 12px 28px -10px var(--accent-glow),
       0 0 24px var(--accent-glow);
+    animation: jelly-bubble 0.52s cubic-bezier(0.16, 0.82, 0.28, 1) forwards;
   }
 
   /*
-    Pointing at the pill itself goes further than pointing at the row. Without
-    this the button never responds to you directly, which is most of why the
-    first version felt inert — nothing rewarded aiming at it.
-    Higher specificity than the rule above, so it wins.
+    Reaching the pill itself bubbles it a second time, tighter and larger.
+    Without a direct response nothing rewards aiming at the button, which is
+    most of why the first version felt inert.
   */
   .group:hover &:hover {
-    transform: translateY(-4px) scale(1.07);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.45),
       0 16px 34px -12px var(--accent-glow),
       0 0 30px var(--accent-glow);
+    animation: jelly-bubble-near 0.4s cubic-bezier(0.16, 0.82, 0.28, 1) forwards;
   }
 
   .group:active & {
-    transform: translateY(2px) scaleX(1.11) scaleY(0.86);
+    animation: none;
+    transform: translateY(2px) scaleX(1.13) scaleY(0.84);
     transition-duration: 0.07s;
     transition-timing-function: ease-out;
   }
