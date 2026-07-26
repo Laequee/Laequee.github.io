@@ -23,6 +23,14 @@
   --accent-line: rgba(0, 229, 255, 0.35);
   --accent-glow: rgba(0, 229, 255, 0.28);
 
+  /*
+    Warm counterpoint, used for the name alone. Opposite temperature to the
+    cyan, so the two never read as competing for the same job. Swap this one
+    value to retint the name — nothing else references it.
+      violet  #a78bfa   ·  magenta  #ff5fa2   ·  lime  #b8f24a
+  */
+  --accent-warm: #ffb020;
+
   --grid: rgba(255, 255, 255, 0.032);
 }
 
@@ -39,6 +47,7 @@
   --color-accent-ink: var(--accent-ink);
   --color-accent-wash: var(--accent-wash);
   --color-accent-line: var(--accent-line);
+  --color-accent-warm: var(--accent-warm);
 
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
   /* Reserved for multi-paragraph prose, where full monospace gets tiring. */

@@ -63,9 +63,19 @@ export function Hero() {
                 doesn't get the largest type on the page.
               */}
               <h1 className="tracking-tight">
-                <span className="block text-base text-ink-soft sm:text-lg">
-                  {profile.name}
-                  <span className="text-ink-faint"> · {profile.title}</span>
+                {/*
+                  Name in the warm accent and at roughly half the headline size:
+                  large enough to register on its own, small enough that it still
+                  reads as the line above the headline rather than beside it.
+                  The title stays small so the pairing has an obvious hierarchy.
+                */}
+                <span className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1 xl:justify-start">
+                  <span className="text-[1.4rem] font-bold text-accent-warm sm:text-[1.7rem] xl:text-[1.9rem]">
+                    {profile.name}
+                  </span>
+                  <span className="text-[13px] text-ink-faint sm:text-[15px]">
+                    · {profile.title}
+                  </span>
                 </span>
 
                 <span className="mt-3 block text-[2.2rem] font-bold leading-[1.06] sm:text-5xl xl:text-[3.1rem]">
