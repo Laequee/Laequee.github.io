@@ -29,12 +29,30 @@ export type Project = {
   metrics: Metric[];
   context: string[];
   approach: { step: string; detail: string }[];
+  /**
+   * Programme phases, for multi-year work still in flight. Omitted on projects
+   * that ran once and closed — an invented phase structure reads as padding.
+   */
+  phases?: { label: string; status: string; detail: string }[];
+  /**
+   * What went wrong and how it was diagnosed. Optional, but a case study without
+   * one is a success arc, and a clean success arc is the least credible shape a
+   * piece of engineering writing can take.
+   */
+  challenges?: { title: string; detail: string }[];
+  /** How the outcome was proved rather than assumed. */
+  validation?: string[];
   outcome: string[];
   stack: string[];
   diagram: {
     caption: string;
     layers: { label: string; nodes: string[] }[];
   };
+  /**
+   * Per-page search keywords. Without this every case study inherits the site-wide
+   * set from the root layout, so eight pages compete on identical terms.
+   */
+  keywords?: string[];
   /** Outstanding questions, surfaced in the build so nothing is quietly forgotten. */
   needs: string[];
 };
@@ -110,72 +128,273 @@ export const projects: Project[] = [
     slug: "active-directory-consolidation",
     index: "02",
     title: "Active Directory Consolidation",
-    kind: "Hybrid identity · Directory services",
+    kind: "Directory services · Hybrid identity · Infrastructure modernisation",
     client: "Enterprise client",
     employer: "HCLTech",
-    period: "2025",
-    role: "Programme contributor",
+    period: "2024 — Present",
+    role: "Technical lead — Active Directory & identity",
     featured: true,
     summary:
-      "Collapsed a fragmented multi-domain directory into a consolidated estate, migrating users across domains and retiring legacy domain controllers while hybrid identity stayed online.",
+      "Took a multinational group's directory from a Windows Server 2008 functional level to 2025 — retiring eight legacy domain controllers, moving SYSVOL off FRS, and consolidating acquired forests — without a single unplanned authentication outage.",
     metrics: [
-      { value: "—", label: "Domains consolidated", pending: true },
-      { value: "—", label: "Users migrated", pending: true },
-      { value: "—", label: "DCs decommissioned", pending: true },
-      { value: "0", label: "Identity outages", pending: true },
+      { value: "8", label: "Legacy DCs decommissioned" },
+      { value: "2008 → 2025", label: "Forest functional level" },
+      { value: "7,400+", label: "User objects in scope" },
+      { value: "0", label: "Unplanned identity outages" },
     ],
     context: [
-      "Years of acquisitions had left the group with multiple Active Directory domains, each with its own controllers, GPO sets, and trust relationships.",
-      "Every new policy had to be authored several times over, and hybrid identity to Entra ID was correspondingly fragile — the more sync sources, the more ways it could break.",
+      "Years of acquisition had left the group running its identity layer on infrastructure that predated most of the applications depending on it. The forest was still at a Windows Server 2008 functional level. SYSVOL still replicated over FRS — a mechanism Microsoft deprecated in 2008 R2 and removed support for entirely in Server 2019, meaning the next domain controller upgrade would have broken policy replication outright.",
+      "Eight domain controllers were spread across legacy hosting, a disaster-recovery site, and business units in three countries, several inherited from acquisitions and none consistently patched. Two separate acquired forests still ran their own directories behind trusts.",
+      "Everything authenticated against it: SAP, Citrix, Dynamics, VMware Horizon, the RPA estate, enterprise Wi-Fi via 802.1X, remote-access VPN, and a hybrid Microsoft 365 tenant. There was no version of this work that could take the directory offline.",
     ],
     approach: [
       {
-        step: "Map the estate",
+        step: "Map before touching anything",
         detail:
-          "Documented domains, trusts, FSMO role placement, DNS and DHCP dependencies, and every service account with a hard dependency on a legacy controller.",
+          "Documented every domain controller, trust, FSMO placement, DNS zone, DHCP scope, certificate template, RADIUS client and service account with a hard dependency on a controller due for retirement. Application dependency mapping covered every LDAP- and Kerberos-integrated system in the estate — because the objects that break a migration are never the ones in the plan.",
       },
       {
-        step: "Cross-domain user migration",
+        step: "Clear the blockers to a functional level raise",
         detail:
-          "Migrated user and group objects between domains with SID history preserved, so existing resource access survived the move.",
+          "Migrated SYSVOL replication from FRS to DFSR and validated consistency across all controllers before touching functional levels. Raised the forest and domain from Windows Server 2008 → 2012 → 2025 in staged hops, each with its own validation gate and rollback position.",
       },
       {
-        step: "Azure AD Connect source anchor transition",
+        step: "Rebuild the controller estate",
         detail:
-          "Upgraded Azure AD Connect and moved the source anchor to ms-DS-ConsistencyGuid, decoupling cloud identity from the on-premises object GUID so users could move between domains without duplicate cloud accounts.",
+          "Deployed four Windows Server 2025 domain controllers across three AD sites, transferred all five FSMO roles onto the new primary, and migrated NPS/RADIUS, DHCP and the Enterprise Certificate Authority onto the new platform. Decommissioned eight legacy controllers with full metadata cleanup, DNS record removal and subnet realignment.",
       },
       {
-        step: "Decommission",
+        step: "Make hybrid identity survive the move",
         detail:
-          "Transferred FSMO roles, repointed DNS and DHCP, demoted legacy controllers, and cleaned up stale trust relationships and DNS records.",
+          "Upgraded Microsoft Entra Connect from v1.5 to current and transitioned the source anchor to mS-DS-ConsistencyGuid, decoupling cloud identity from the on-premises object GUID so users can cross domain boundaries in later phases without generating duplicate cloud accounts.",
       },
+      {
+        step: "Consolidate the acquired forests",
+        detail:
+          "Cross-forest migration of the first acquired domain using Quest Migrator Pro with SID history preserved, covering users, groups, computers and member servers — sequenced non-critical, then file and print, then application, then business-critical. The second forest follows the same runbook.",
+      },
+    ],
+    phases: [
+      {
+        label: "Phase 1",
+        status: "Delivered",
+        detail:
+          "SYSVOL off FRS, functional level raised to 2025, four new controllers deployed and eight legacy controllers retired. 65 of 65 tasks through formal change control.",
+      },
+      {
+        label: "Phase 2",
+        status: "In flight",
+        detail:
+          "Cross-forest consolidation of the first acquired domain with SID history preserved, sequenced from non-critical workloads through to business-critical.",
+      },
+      {
+        label: "Phase 3",
+        status: "Planned",
+        detail: "Second acquired forest, following the runbook proven in Phase 2.",
+      },
+    ],
+    challenges: [
+      {
+        title: "A RADIUS extension took down enterprise Wi-Fi",
+        detail:
+          "Installing the Entra MFA NPS Extension on a domain controller to build VPN authentication failover triggered an authentication storm across the wireless estate. Root cause: the extension's scope is server-wide, not per-policy — every RADIUS request on that host gets an MFA challenge, including 802.1X machine authentication that has no user to prompt. Fixed by uninstalling and establishing an architectural rule that VPN and 802.1X RADIUS workloads never share an NPS instance.",
+      },
+      {
+        title: "Certificate expiry with no alert path",
+        detail:
+          "A PEAP authentication certificate issued by a regional CA expired unnoticed because the issuing CA had become unreachable over RPC from the primary site, silently breaking auto-renewal. Restored service the same day with a scoped self-signed certificate, then fixed the enrolment path properly. Service first, architecture second.",
+      },
+      {
+        title: "Audit policy that reverted on reboot",
+        detail:
+          "NPS security auditing kept disabling itself after restarts. The local setting was correct; a higher-precedence GPO was overwriting it, and a legacy audit policy flag was suppressing the subcategory entirely. Resolved at the Default Domain Controllers Policy level — a reminder that on a domain controller, the local configuration is rarely the one that wins.",
+      },
+    ],
+    validation: [
+      "Replication verified with repadmin /replsummary and /showrepl across all site links; DFSR backlog confirmed clear before and after each change. dcdiag /e /c clean across the estate.",
+      "FSMO placement, SPN registration and secure channel health confirmed post-cutover. Directory synchronisation validated end-to-end against the Microsoft 365 tenant after the source anchor transition, with object counts reconciled on both sides.",
     ],
     outcome: [
-      "A consolidated directory with a single authoritative policy set instead of one per acquired entity.",
-      "Hybrid identity resilient to future domain moves, thanks to the source anchor change.",
-      "Legacy domain controllers retired, removing an unpatched attack surface and the licensing behind it.",
+      "A single authoritative directory at a current functional level, with policy authored once instead of per acquired entity.",
+      "Eight unpatched domain controllers removed from the attack surface, along with their hosting and licensing cost.",
+      "SYSVOL replication on a supported mechanism — the blocker to every future Windows Server upgrade, cleared.",
+      "Hybrid identity re-anchored so the remaining forest consolidations can proceed without duplicate cloud accounts.",
+      "65 of 65 Phase 1 tasks delivered through formal change control, with zero unplanned authentication outages across a 4,000-user estate.",
     ],
-    stack: ["Active Directory", "Azure AD Connect", "Entra ID", "Group Policy", "DNS / DHCP", "PowerShell"],
+    stack: [
+      "Active Directory Domain Services",
+      "Windows Server 2025",
+      "DFSR",
+      "FSMO",
+      "Quest Migrator Pro",
+      "Entra ID",
+      "Entra Connect",
+      "Group Policy",
+      "AD CS / PKI",
+      "NPS / RADIUS",
+      "DNS / DHCP",
+      "PowerShell",
+    ],
     diagram: {
-      caption: "Fragmented domains to a consolidated directory",
+      caption:
+        "Eight legacy controllers across three countries collapsed onto four Windows Server 2025 domain controllers, with hybrid identity re-anchored to survive future domain moves.",
       layers: [
-        { label: "Legacy", nodes: ["Domain 1", "Domain 2", "Domain 3", "Trusts"] },
-        { label: "Transition", nodes: ["SID history", "AAD Connect", "Source anchor"] },
-        { label: "Target", nodes: ["Consolidated AD", "Entra ID"] },
+        {
+          label: "Before",
+          nodes: ["8 DCs, mixed OS", "FFL 2008", "3 forests", "Entra Connect v1.5"],
+        },
+        {
+          label: "Transition",
+          nodes: ["FRS → DFSR", "FSMO transfer", "SID history", "Source anchor change"],
+        },
+        {
+          label: "After",
+          nodes: ["4 DCs, Server 2025", "FFL 2025", "1 forest, consolidating", "ConsistencyGuid"],
+        },
       ],
     },
+    keywords: [
+      "Active Directory consolidation",
+      "forest functional level 2025",
+      "FRS to DFSR migration",
+      "SYSVOL replication",
+      "domain controller decommission",
+      "FSMO transfer",
+      "Quest Migrator Pro",
+      "SID history",
+      "Entra Connect source anchor",
+      "mS-DS-ConsistencyGuid",
+      "hybrid identity",
+    ],
     needs: [
-      "Domain count before and after",
-      "Number of users and groups migrated",
-      "How many domain controllers were decommissioned",
-      "Whether SID history was actually used, or a different approach",
-      "Your specific role — led, executed, or supported",
+      "Reconcile the two user figures — 7,400+ user objects in scope vs a 4,000-user estate in the outcome. Both may be true (objects include disabled and service accounts) but they sit on one page and invite the question.",
+      "Countries served — 6 was offered as an alternative stat; confirm before using it anywhere.",
     ],
   },
 
   {
-    slug: "intune-endpoint-platform",
+    slug: "ad-security-hardening",
     index: "03",
+    title: "Active Directory Security Hardening",
+    kind: "Security & compliance · CIS Benchmarks",
+    client: "Enterprise client",
+    employer: "HCLTech",
+    period: "2025 — Present",
+    role: "Security & compliance lead — AD and Windows estate",
+    featured: true,
+    summary:
+      "Took a domain controller estate from unbaselined to a 94% CIS compliance score under independent Qualys assessment — and did it without breaking the twenty-year accumulation of applications that depended on the insecure defaults.",
+    /*
+     * Ordered so the two the index card surfaces are the score and the scale.
+     * Leading with 94% and 93% would put two near-identical percentages side by
+     * side and say less than 94% next to the size of the estate.
+     */
+    metrics: [
+      { value: "94%", label: "DC compliance score" },
+      { value: "~70", label: "Servers hardened" },
+      { value: "93%", label: "Member server score" },
+      { value: "20", label: "GPOs, consolidated" },
+    ],
+    context: [
+      "Security hardening at scale is not a configuration problem. Applying a CIS Benchmark to a lab domain controller takes an afternoon. Applying it to a production directory that authenticates SAP, Citrix, Dynamics, a robotic process automation estate, enterprise Wi-Fi, remote-access VPN and a hybrid Microsoft 365 tenant is a dependency-mapping problem wearing a configuration problem's clothes.",
+      "The estate had accumulated two decades of permissive defaults — legacy authentication protocols still in active use, inconsistent Group Policy sprawl across 500+ organisational units, and no measured compliance baseline against any recognised standard. Independent VAPT assessment through Qualys was the scoring authority, which meant remediation had to satisfy an external scanner, not just internal judgement.",
+    ],
+    approach: [
+      {
+        step: "Establish the baseline, honestly",
+        detail:
+          "Ran the estate against CIS Benchmarks through Qualys SCA to get a real starting score rather than an assumed one. Split the target into three distinct baselines — domain controllers, member servers, end-user endpoints — because a control that is correct on a file server can break a domain controller, and treating them as one estate is how hardening projects cause outages.",
+      },
+      {
+        step: "Map dependencies before enforcing controls",
+        detail:
+          "Audited every finding against what actually consumed it. The NTLM controls were the clearest example: the benchmark calls for refusing legacy NTLM entirely, but an authentication-event audit found active NTLMv1 dependencies across the RPA platform, SAP, the certificate authority, the SMTP relay and cross-forest service accounts. Enforcing the control would have taken out production. Documented it as a formal, evidence-backed compliance exception with a phased remediation roadmap, rather than either breaking the estate or quietly ignoring the finding.",
+      },
+      {
+        step: "Consolidate Group Policy",
+        detail:
+          "Collapsed a sprawling policy set into 20 purpose-defined GPOs with clear scope and precedence across 503 OUs. Precedence turned out to matter more than content — several controls were configured correctly and still failing because a higher-precedence policy was silently overriding them.",
+      },
+      {
+        step: "Deploy at scale, safely",
+        detail:
+          "Built PowerShell tooling for fleet-wide remediation: type-safe registry writes through the Win32 API rather than string-based cmdlets, throttled parallel execution across ~70 servers, per-host CSV audit logging, and a dry-run mode as the default rather than an option. Every domain-wide change went through CAB approval with a documented rollback position.",
+      },
+      {
+        step: "Verify, and challenge the scanner",
+        detail:
+          "Rescanned after each remediation wave. Where findings persisted despite the configuration demonstrably matching the expected value, investigated rather than re-applied — several turned out to be scanner defects rather than server misconfigurations, and were documented as such. Accepting a false positive at face value would have meant repeatedly changing working systems to satisfy a broken check.",
+      },
+    ],
+    challenges: [
+      {
+        title: "Findings that were real, and findings that weren't",
+        detail:
+          "Multiple Qualys QIDs reported failures with the actual value identical to the expected value. Chasing these as genuine misconfigurations would have burned weeks and risked production changes to satisfy a defective check. Proving them as scanner defects — with evidence — was faster and more honest than either fixing or ignoring them.",
+      },
+      {
+        title: "Registry paths that failed silently",
+        detail:
+          "A firewall logging control kept failing until the deployed value was inspected byte-for-byte: the path had been written with regex-escaped characters intact, so the setting existed, looked right in a policy report, and pointed nowhere.",
+      },
+      {
+        title: "Accounts that Group Policy cannot reach",
+        detail:
+          "Remediating user-hive settings on accounts that had never logged on is impossible by design — no profile means no ntuser.dat for policy to write into. Resolved by staging a blank hive from the default user template so the setting could be applied before first logon rather than after.",
+      },
+      {
+        title: "The wrong GPO winning",
+        detail:
+          "More than one control was configured correctly and failing anyway because an enforced policy higher in the precedence chain was overriding it. On a domain controller, “I set it” and “it is set” are different statements, and only gpresult settles the difference.",
+      },
+    ],
+    outcome: [
+      "94% CIS compliance score on domain controllers and 93% on the member server baseline under independent Qualys assessment.",
+      "~70 Windows servers brought under a governed, version-controlled baseline instead of individual configuration drift.",
+      "Group Policy reduced to 20 defined, scoped policies with documented precedence.",
+      "Every unremediated finding carries a written justification, a dependency map and a remediation roadmap — an audit position rather than an open gap.",
+      "Domain-wide security auditing enabled and verified persistent across reboots, closing a blind spot where authentication events were going unrecorded.",
+    ],
+    stack: [
+      "CIS Benchmarks",
+      "Qualys VAPT / SCA",
+      "Group Policy",
+      "Active Directory Domain Services",
+      "Windows Server 2016–2025",
+      "PowerShell",
+      "NTLM & Kerberos hardening",
+      "Microsoft Defender for Endpoint",
+      "CrowdStrike Falcon",
+      "Windows Security Auditing",
+    ],
+    diagram: {
+      caption:
+        "An unbaselined Windows estate measured against CIS Benchmarks, remediated through 20 scoped policies, and re-scored under independent assessment.",
+      layers: [
+        { label: "Before", nodes: ["No baseline", "503 OUs", "Policy sprawl", "NTLMv1 in use"] },
+        { label: "Assess", nodes: ["Qualys SCA", "CIS Benchmarks", "Dependency audit"] },
+        { label: "Remediate", nodes: ["3 baselines", "20 scoped GPOs", "PowerShell fleet"] },
+        { label: "After", nodes: ["94% domain controllers", "93% member servers"] },
+      ],
+    },
+    keywords: [
+      "Active Directory hardening",
+      "CIS Benchmarks",
+      "Qualys VAPT",
+      "Qualys SCA",
+      "Group Policy consolidation",
+      "NTLM hardening",
+      "Windows Server security baseline",
+      "compliance exception",
+      "PowerShell remediation",
+      "security auditing",
+    ],
+    needs: [],
+  },
+
+  {
+    slug: "intune-endpoint-platform",
+    index: "04",
     title: "Intune Endpoint Platform",
     kind: "Endpoint management · Zero Trust",
     client: "Enterprise client",
@@ -247,7 +466,7 @@ export const projects: Project[] = [
 
   {
     slug: "sharepoint-file-server-migration",
-    index: "04",
+    index: "05",
     title: "File Server to SharePoint Online",
     kind: "Collaboration · Data migration",
     client: "Enterprise client",
@@ -314,7 +533,7 @@ export const projects: Project[] = [
 
   {
     slug: "tenant-to-tenant-m365",
-    index: "05",
+    index: "06",
     title: "Tenant-to-Tenant M365 Migration",
     kind: "Cloud migration · M&A integration",
     client: "Enterprise client",
@@ -385,7 +604,7 @@ export const projects: Project[] = [
 
   {
     slug: "sharepoint-intranet",
-    index: "06",
+    index: "07",
     title: "Group Intranet on SharePoint",
     kind: "Digital workplace",
     client: "Enterprise client",
@@ -451,7 +670,7 @@ export const projects: Project[] = [
 
   {
     slug: "license-optimisation",
-    index: "07",
+    index: "08",
     title: "Licence Optimisation",
     kind: "Cost engineering",
     client: "Enterprise client",
@@ -509,7 +728,7 @@ export const projects: Project[] = [
 
   {
     slug: "backup-and-dr",
-    index: "08",
+    index: "09",
     title: "Backup & Disaster Recovery",
     kind: "Business continuity",
     client: "Enterprise client",

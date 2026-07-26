@@ -17,9 +17,25 @@ export async function generateMetadata(props: PageProps<"/projects/[slug]">): Pr
   const project = getProject(slug);
   if (!project) return {};
 
+  /*
+   * Per-project keywords override the site-wide set from the root layout —
+   * without them every case study competes on identical terms, which is worth
+   * nothing to any of them.
+   *
+   * The fallback matters: setting this field to undefined does not inherit the
+   * parent list, it clears it. Projects without a hand-written set get terms
+   * drawn from their own discipline and stack instead of nothing at all.
+   */
+  const keywords = project.keywords ?? [
+    project.title,
+    ...project.kind.split("·").map((part) => part.trim()),
+    ...project.stack,
+  ];
+
   return {
     title: project.title,
     description: project.summary,
+    keywords,
     openGraph: { title: project.title, description: project.summary, type: "article" },
   };
 }
@@ -68,10 +84,15 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
           <dl className="mt-5 grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
             {project.metrics.map((metric) => (
               <div key={metric.label} className="bg-bg px-5 py-6">
+                {/*
+                  Most values are three or four characters. A range like
+                  "2008 → 2025" is eleven and overruns the cell at 3xl, so
+                  anything long drops a step rather than clipping.
+                */}
                 <dd
-                  className={`text-3xl font-semibold tabular-nums tracking-tight ${
-                    metric.pending ? "text-ink-faint/50" : ""
-                  }`}
+                  className={`font-semibold tabular-nums tracking-tight ${
+                    metric.value.length > 7 ? "text-2xl" : "text-3xl"
+                  } ${metric.pending ? "text-ink-faint/50" : ""}`}
                 >
                   {metric.value}
                 </dd>
@@ -116,6 +137,29 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
             </section>
           </Reveal>
 
+          {project.phases && (
+            <Reveal>
+              <section className="mt-12">
+                <h2 className="text-2xl font-semibold tracking-tight">Programme phases</h2>
+                <ol className="mt-6 grid gap-px border border-rule bg-rule sm:grid-cols-3">
+                  {project.phases.map((phase) => (
+                    <li key={phase.label} className="bg-bg px-5 py-6">
+                      <div className="flex items-baseline gap-2.5">
+                        <span className="font-mono text-[11px] tracking-[0.14em] text-accent">
+                          {phase.label}
+                        </span>
+                        <span className="annot">{phase.status}</span>
+                      </div>
+                      <p className="prose-face mt-3 text-[14px] leading-relaxed text-ink-soft">
+                        {phase.detail}
+                      </p>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            </Reveal>
+          )}
+
           <Reveal>
             <section className="mt-12">
               <h2 className="text-2xl font-semibold tracking-tight">Architecture</h2>
@@ -124,6 +168,52 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
               </div>
             </section>
           </Reveal>
+
+          {/*
+            Sits between the architecture and the outcome deliberately: the reader
+            has the shape of the work by now, and the outcome lands harder after
+            the things that nearly stopped it.
+          */}
+          {project.challenges && (
+            <Reveal>
+              <section className="mt-12">
+                <h2 className="text-2xl font-semibold tracking-tight">
+                  Where it got difficult
+                </h2>
+                <ul className="mt-6 space-y-px bg-rule">
+                  {project.challenges.map((item) => (
+                    <li key={item.title} className="bg-bg pb-6 pt-6">
+                      <h3 className="flex gap-3 text-[17px] font-semibold tracking-tight">
+                        <span aria-hidden="true" className="mt-2.5 h-px w-4 shrink-0 bg-accent" />
+                        {item.title}
+                      </h3>
+                      <p className="prose-face mt-2 pl-7 text-[15px] leading-relaxed text-ink-soft">
+                        {item.detail}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </Reveal>
+          )}
+
+          {project.validation && (
+            <Reveal>
+              <section className="mt-12">
+                <h2 className="text-2xl font-semibold tracking-tight">Validation</h2>
+                <div className="mt-5 border-l-2 border-accent-line pl-5">
+                  {project.validation.map((paragraph) => (
+                    <p
+                      key={paragraph}
+                      className="prose-face text-[15px] leading-relaxed text-ink-soft [&+p]:mt-4"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </section>
+            </Reveal>
+          )}
 
           <Reveal>
             <section className="mt-12">

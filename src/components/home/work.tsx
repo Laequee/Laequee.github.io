@@ -67,7 +67,17 @@ export function Work() {
                     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-1 lg:gap-y-3.5">
                       {confirmed.slice(0, 2).map((metric) => (
                         <div key={metric.label} className="lg:flex lg:items-baseline lg:gap-3">
-                          <dd className="text-lg font-semibold tabular-nums lg:w-20 lg:shrink-0">
+                          {/*
+                            min-w rather than a fixed w: short values still line
+                            the labels up in a column, but a range like
+                            "2008 → 2025" is free to run past 5rem instead of
+                            overlapping the label beside it.
+                          */}
+                          <dd
+                            className={`font-semibold tabular-nums lg:min-w-20 lg:shrink-0 ${
+                              metric.value.length > 7 ? "text-[15px]" : "text-lg"
+                            }`}
+                          >
                             {metric.value}
                           </dd>
                           <dt className="annot mt-0.5 lg:mt-0">{metric.label}</dt>
