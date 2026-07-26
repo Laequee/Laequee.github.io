@@ -47,20 +47,6 @@ export function Hero() {
           </div>
 
           <div className="order-2 w-full text-center xl:order-1 xl:text-left">
-            {profile.availability.open && (
-              <Reveal>
-                <p className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-accent-line bg-accent-wash px-3.5 py-1.5">
-                  <span className="relative grid size-1.5 place-items-center">
-                    <span className="absolute size-1.5 rounded-full bg-accent animate-pulse-dot" />
-                    <span className="size-1.5 rounded-full bg-accent" />
-                  </span>
-                  <span className="text-[11px] uppercase tracking-[0.16em] text-accent">
-                    {profile.availability.label}
-                  </span>
-                </p>
-              </Reveal>
-            )}
-
             <Reveal delay={60}>
               {/*
                 The discipline leads, not a greeting. The name still sits inside the
@@ -69,17 +55,19 @@ export function Hero() {
               */}
               <h1 className="tracking-tight">
                 {/*
-                  Name in the warm accent and at roughly half the headline size:
-                  large enough to register on its own, small enough that it still
-                  reads as the line above the headline rather than beside it.
-                  The title stays small so the pairing has an obvious hierarchy.
+                  Name in the warm accent at about three quarters of the headline
+                  size — big enough to carry the top of the page on its own, still
+                  clearly subordinate to the headline beneath it. The title stays
+                  small so the pairing keeps an obvious hierarchy, and at this size
+                  it wraps to its own line, which is why the separator is gone:
+                  a leading middot on a line of its own reads as a stray mark.
                 */}
                 <span className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1 xl:justify-start">
-                  <span className="text-[1.4rem] font-bold text-accent-warm sm:text-[1.7rem] xl:text-[1.9rem]">
+                  <span className="text-[1.75rem] font-bold text-accent-warm sm:text-[2.1rem] xl:text-[2.45rem]">
                     {profile.name}
                   </span>
                   <span className="text-[13px] text-ink-faint sm:text-[15px]">
-                    · {profile.title}
+                    {profile.title}
                   </span>
                 </span>
 

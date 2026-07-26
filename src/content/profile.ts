@@ -37,9 +37,12 @@ export const profile = {
 
   summary: `${yearsExperience}+ years delivering enterprise-scale cloud, endpoint, and hybrid identity work across multi-tenant environments. Most of it is migration and consolidation: moving thousands of endpoints between security tenants without downtime, collapsing legacy domains into a single directory, and taking file servers into SharePoint Online for business units that had never left the shared drive.`,
 
+  /*
+   * No badge any more — this only drives the "Looking for" block and the lede
+   * in the contact section. Set `open: false` and both disappear.
+   */
   availability: {
     open: true,
-    label: "Available for hire",
     detail: "Open to roles in Dubai · on-site or hybrid",
   },
 
