@@ -222,20 +222,95 @@
   border: 1px solid color-mix(in srgb, var(--console) 22%, transparent);
 }
 
-/* Accent-outlined pill: CV button, social circles, tags. */
+/*
+  Soft-body buttons.
+
+  The look Jelly UI sells, built from our own tokens rather than loading their
+  hosted script: a faint gradient body, an inset top highlight so the surface
+  reads as lit from above, a spring curve that overshoots on the way in, and a
+  squash on press. Reduced-motion users get the colour change without the
+  physics, via the global rule above.
+*/
 @utility neon-outline {
-  border: 1px solid var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
   color: var(--accent);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 13%, transparent),
+    color-mix(in srgb, var(--accent) 4%, transparent)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--accent) 30%, transparent),
+    0 4px 14px -8px var(--accent-glow);
+  transform-origin: center;
+  /* Overshoots slightly — that is what reads as soft rather than mechanical. */
   transition:
-    background-color 0.2s,
-    color 0.2s,
-    box-shadow 0.2s;
+    transform 0.34s cubic-bezier(0.34, 1.4, 0.64, 1),
+    background-color 0.22s,
+    color 0.22s,
+    box-shadow 0.3s,
+    border-color 0.22s;
 
   &:hover,
   &:focus-visible {
     background-color: var(--accent);
+    background-image: none;
     color: var(--accent-ink);
-    box-shadow: 0 0 24px var(--accent-glow);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 10px 26px -10px var(--accent-glow),
+      0 0 22px var(--accent-glow);
+  }
+
+  &:active {
+    /* Squash and settle — the press should feel absorbed, not clicked. */
+    transform: translateY(1px) scaleX(1.04) scaleY(0.9);
+    transition-duration: 0.09s;
+  }
+}
+
+/*
+  The same body, but driven by an ancestor .group rather than its own hover.
+  The project rows are already links, so this has to be a span — nesting a real
+  button inside an anchor is invalid and breaks keyboard navigation.
+*/
+@utility jelly-cta {
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 13%, transparent),
+    color-mix(in srgb, var(--accent) 4%, transparent)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--accent) 30%, transparent),
+    0 4px 14px -8px var(--accent-glow);
+  transform-origin: center;
+  transition:
+    transform 0.34s cubic-bezier(0.34, 1.4, 0.64, 1),
+    background-color 0.22s,
+    color 0.22s,
+    box-shadow 0.3s,
+    border-color 0.22s;
+
+  .group:hover &,
+  .group:focus-visible & {
+    background-color: var(--accent);
+    background-image: none;
+    color: var(--accent-ink);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 10px 26px -10px var(--accent-glow),
+      0 0 22px var(--accent-glow);
+  }
+
+  .group:active & {
+    transform: translateY(1px) scaleX(1.04) scaleY(0.9);
+    transition-duration: 0.09s;
   }
 }
 

@@ -54,7 +54,8 @@ export function Work() {
                   </ul>
                 </div>
 
-                <div className="lg:w-56">
+                {/* w-64, not w-56 — the CTA label needs ~226px and was wrapping. */}
+                <div className="lg:w-64">
                   {/*
                     Unconfirmed metrics are never shown on the index — a dash here reads
                     as a broken row rather than an honest gap. Projects with nothing
@@ -84,8 +85,8 @@ export function Work() {
                       </div>
                     </dl>
                   )}
-                  <span className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint transition-colors group-hover:text-accent">
-                    Case study
+                  <span className="jelly-cta mt-5 inline-flex items-center gap-2.5 whitespace-nowrap rounded-full px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em]">
+                    View full case study
                     <span
                       aria-hidden="true"
                       className="transition-transform duration-300 group-hover:translate-x-1"
