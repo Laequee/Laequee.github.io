@@ -91,8 +91,8 @@ export const profile = {
  * can run on the numeral alone.
  */
 export const headlineStats = [
-  { value: yearsExperience, suffix: "+", label: "Years in enterprise IT", note: "Since Oct 2020" },
-  { value: 4500, suffix: "+", label: "Endpoints secured", note: "CrowdStrike migration" },
-  { value: 2000, suffix: "+", label: "Devices under Intune", note: "Autopilot · compliance" },
-  { value: 14, suffix: "+", label: "Business units served", note: "Current engagement" },
+  { value: yearsExperience, suffix: "+", label: "Years in Enterprise IT", note: "Since Oct 2020" },
+  { value: 4500, suffix: "+", label: "Endpoints Protected", note: "CrowdStrike · Defender" },
+  { value: 2000, suffix: "+", label: "Devices Managed", note: "Intune · Autopilot" },
+  { value: 14, suffix: "+", label: "Business Units Supported", note: "Enterprise IT delivery" },
 ] as const;
