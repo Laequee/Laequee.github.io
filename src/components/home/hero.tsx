@@ -78,18 +78,19 @@ export function Hero() {
                   </span>
                 </span>
 
-                <span className="mt-3 block text-[2.2rem] font-bold leading-[1.06] sm:text-5xl xl:text-[3.1rem]">
-                  {headlineLead}
-                </span>
-                {/* Accent wipe sweeps in from the left and flips the text dark. */}
-                <span className="group relative mt-1 inline-block cursor-default overflow-hidden align-top">
-                  <span className="relative z-10 block px-1 text-[2.2rem] font-bold leading-[1.06] text-accent transition-colors duration-500 group-hover:text-accent-ink sm:text-5xl xl:text-[3.1rem]">
+                {/*
+                  Both headline lines share one hover group, so the accent wipe
+                  sweeps the whole phrase rather than just the second line —
+                  highlighting half a sentence read as a bug, not a flourish.
+                  Each line keeps its own overlay so the fill hugs the text
+                  instead of squaring off to the longest line, and the second is
+                  delayed slightly so the sweep travels down.
+                */}
+                <span className="group mt-3 block cursor-default">
+                  <HeadlineLine>{headlineLead}</HeadlineLine>
+                  <HeadlineLine accent delay="delay-100">
                     {headlineTail}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-0 z-0 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"
-                  />
+                  </HeadlineLine>
                 </span>
               </h1>
             </Reveal>
@@ -141,6 +142,37 @@ export function Hero() {
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * One line of the headline, with an accent panel that wipes in from the left on
+ * hover of the shared parent group. On hover both lines flip to the dark
+ * accent ink — white on cyan would be unreadable.
+ */
+function HeadlineLine({
+  children,
+  accent,
+  delay = "",
+}: {
+  children: React.ReactNode;
+  accent?: boolean;
+  delay?: string;
+}) {
+  return (
+    <span className="relative inline-block overflow-hidden align-top">
+      <span
+        className={`relative z-10 block px-1 text-[2.2rem] font-bold leading-[1.06] transition-colors duration-500 group-hover:text-accent-ink sm:text-5xl xl:text-[3.1rem] ${
+          accent ? "text-accent" : "text-ink"
+        }`}
+      >
+        {children}
+      </span>
+      <span
+        aria-hidden="true"
+        className={`absolute inset-0 z-0 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100 ${delay}`}
+      />
+    </span>
   );
 }
 
