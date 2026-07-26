@@ -1,4 +1,5 @@
 import { Certifications } from "@/components/home/certifications";
+import { ComplianceReport } from "@/components/home/compliance-report";
 import { Contact } from "@/components/home/contact";
 import { ExperienceTimeline } from "@/components/home/experience-timeline";
 import { Hero } from "@/components/home/hero";
@@ -17,6 +18,7 @@ export default function Home() {
       <Work />
       <ExperienceTimeline />
       <SkillsMatrix />
+      <ComplianceReport />
       <Certifications />
       <ProfilePanel />
       <Contact />

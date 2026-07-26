@@ -5,7 +5,7 @@ import { certifications } from "@/content/certifications";
 export function Certifications() {
   return (
     <Section
-      index="04"
+      index="05"
       id="certifications"
       title="Certifications"
       lede="Microsoft, Cisco, and platform credentials."
