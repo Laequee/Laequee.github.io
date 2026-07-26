@@ -9,9 +9,20 @@ const socials = [
   { label: "Phone", href: profile.contact.phoneHref, icon: PhoneIcon },
 ];
 
-export function Hero() {
-  const [first, ...rest] = profile.name.split(" ");
+/*
+ * "Cloud, Identity & Endpoint Engineering" split so the accent lands on the
+ * second line. Hardcoded rather than derived — the break point is a typographic
+ * judgement about balancing two lines, not something a split() rule gets right.
+ *
+ * The two lines are 17 and 20 monospace characters. At the xl size they need
+ * roughly 510px and 600px; the left column is ~648px once the portrait is
+ * 400px wide. Shrinking the type or widening that column any further is what
+ * keeps the ampersand from orphaning onto a line of its own.
+ */
+const headlineLead = "Cloud, Identity &";
+const headlineTail = "Endpoint Engineering";
 
+export function Hero() {
   return (
     <section className="relative overflow-hidden">
       {/* Accent bloom behind the portrait, keeps the right side from going flat. */}
@@ -46,16 +57,24 @@ export function Hero() {
             )}
 
             <Reveal delay={60}>
-              <p className="text-lg text-ink-soft sm:text-xl">{profile.title}</p>
+              {/*
+                The discipline leads, not a greeting. The name still sits inside the
+                h1 so a search for it still matches the top-level heading — it just
+                doesn't get the largest type on the page.
+              */}
+              <h1 className="tracking-tight">
+                <span className="block text-base text-ink-soft sm:text-lg">
+                  {profile.name}
+                  <span className="text-ink-faint"> · {profile.title}</span>
+                </span>
 
-              <h1 className="mt-3 text-[2.6rem] font-bold leading-[1.08] tracking-tight sm:text-6xl xl:text-[4.2rem]">
-                <span className="block">Hello I&apos;m</span>
+                <span className="mt-3 block text-[2.2rem] font-bold leading-[1.06] sm:text-5xl xl:text-[3.1rem]">
+                  {headlineLead}
+                </span>
                 {/* Accent wipe sweeps in from the left and flips the text dark. */}
                 <span className="group relative mt-1 inline-block cursor-default overflow-hidden align-top">
-                  <span className="relative z-10 block px-1 text-accent transition-colors duration-500 group-hover:text-accent-ink">
-                    {first}
-                    <br />
-                    {rest.join(" ")}
+                  <span className="relative z-10 block px-1 text-[2.2rem] font-bold leading-[1.06] text-accent transition-colors duration-500 group-hover:text-accent-ink sm:text-5xl xl:text-[3.1rem]">
+                    {headlineTail}
                   </span>
                   <span
                     aria-hidden="true"

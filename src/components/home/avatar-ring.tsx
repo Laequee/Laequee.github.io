@@ -12,7 +12,9 @@ import { profile } from "@/content/profile";
  */
 export function AvatarRing() {
   return (
-    <div className="relative grid size-[280px] place-items-center sm:size-[360px] xl:size-[460px]">
+    // 400px at xl, not larger — the headline column needs the width to keep
+    // "Cloud, Identity &" on one line.
+    <div className="relative grid size-[280px] place-items-center sm:size-[360px] xl:size-[400px]">
       <svg
         viewBox="0 0 506 506"
         className="absolute inset-0 size-full animate-ring"
