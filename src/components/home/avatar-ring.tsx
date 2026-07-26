@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { profile } from "@/content/profile";
+import { profile, type Avatar } from "@/content/profile";
 
 const avatars = profile.avatars;
 
@@ -68,8 +68,8 @@ export function AvatarRing() {
               transform: `rotateY(${flips * 180}deg)`,
             }}
           >
-            <Face src={avatars[faces[0]].src} rotated={false} />
-            <Face src={avatars[faces[1]].src} rotated />
+            <Face avatar={avatars[faces[0]]} rotated={false} />
+            <Face avatar={avatars[faces[1]]} rotated />
           </div>
         </button>
       </div>
@@ -87,7 +87,7 @@ export function AvatarRing() {
   );
 }
 
-function Face({ src, rotated }: { src: string; rotated: boolean }) {
+function Face({ avatar, rotated }: { avatar: Avatar; rotated: boolean }) {
   return (
     <span
       className="glow absolute inset-0 overflow-hidden rounded-full border border-rule-strong bg-surface"
@@ -98,11 +98,13 @@ function Face({ src, rotated }: { src: string; rotated: boolean }) {
       }}
     >
       <Image
-        src={src}
+        src={avatar.src}
         alt={`${profile.name}, ${profile.title}`}
         width={400}
         height={400}
         className="size-full object-cover"
+        /* Scaled inside the frame; the parent clips the overflow. */
+        style={avatar.zoom ? { transform: `scale(${avatar.zoom})` } : undefined}
         preload
       />
     </span>

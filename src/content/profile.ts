@@ -18,6 +18,44 @@ export const yearsExperience = Math.floor(
   (Date.now() - CAREER_START) / (365.25 * 24 * 60 * 60 * 1000),
 );
 
+export type Avatar = {
+  src: string;
+  /** Used in the button's accessible label: "Change portrait. Current: …". */
+  mood: string;
+  /**
+   * Scale applied inside the circular frame, for artwork that doesn't already
+   * fill it. Omit unless the subject is genuinely too small.
+   */
+  zoom?: number;
+};
+
+/*
+ * The hero portrait flips between these on click, in array order — index 0 is
+ * what loads, index 1 is the first click, and so on. Any number of entries
+ * works, so new artwork is a one-line insert at the position you want it
+ * revealed.
+ *
+ * The trailing three are the same caricature re-tinted; replace them as real
+ * alternates arrive.
+ *
+ * Declared out here with an explicit type rather than inline below: `profile`
+ * is `as const`, which would infer a union of two different object shapes and
+ * make `zoom` unreadable on the entries that lack it.
+ */
+const avatars: Avatar[] = [
+  { src: "/avatar-scene.jpg", mood: "on location" },
+  /*
+   * The subject sits inside a pale disc covering about 57% of a white square.
+   * Left alone, the circular frame would crop that to a white ring around a
+   * smaller disc. 1.72 scales the disc out to the frame edge, which also
+   * matches how the caricatures read — subject on a solid colour field.
+   */
+  { src: "/avatar-headshot.jpg", mood: "headshot", zoom: 1.72 },
+  { src: "/avatar-teal.png", mood: "teal" },
+  { src: "/avatar-rose.png", mood: "rose" },
+  { src: "/avatar-slate.png", mood: "slate" },
+];
+
 export const profile = {
   name: "Mohammed Laeque",
   initials: "ML",
@@ -68,22 +106,7 @@ export const profile = {
     hasCv: false,
   },
 
-  /*
-   * The hero portrait flips between these on click, in array order — index 0 is
-   * what loads, index 1 is the first click, and so on. The switcher takes any
-   * number of entries, so new artwork is a one-line insert at the position you
-   * want it revealed.
-   *
-   * The trailing three are still the same caricature re-tinted; replace them as
-   * real alternates arrive.
-   */
-  avatars: [
-    { src: "/avatar-violet.png", mood: "caricature" },
-    { src: "/avatar-vector.jpg", mood: "vector portrait" },
-    { src: "/avatar-teal.png", mood: "teal" },
-    { src: "/avatar-rose.png", mood: "rose" },
-    { src: "/avatar-slate.png", mood: "slate" },
-  ],
+  avatars,
 
   education: {
     degree: "BCA, Computer Science",
