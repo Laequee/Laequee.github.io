@@ -39,7 +39,7 @@ export const experience: Role[] = [
     summary:
       "End-to-end IT operations, cloud transformation, and security hardening across a large multi-tenant environment spanning 14+ business units.",
     highlights: [
-      "Executed the CrowdStrike tenant migration for Agthia Group across 7 AD domains and 4,500+ endpoints.",
+      "Executed the CrowdStrike tenant migration across 7 AD domains and 4,500+ endpoints.",
       "Designed endpoint management at scale — Intune, Autopilot, compliance baselines, BitLocker, and LAPS across 2,000+ devices.",
       "Led the Active Directory consolidation programme, decommissioning legacy domain controllers and executing cross-domain user migration.",
       "Upgraded Azure AD Connect, including a source anchor transition, without breaking hybrid identity.",

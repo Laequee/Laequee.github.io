@@ -48,7 +48,7 @@ export function Contact() {
             <p className="mt-3 text-[15px] font-semibold leading-snug tracking-tight">
               {profile.title}
             </p>
-            <p className="mt-1 text-sm text-ink-soft">HCLTech · Agthia Group PJSC</p>
+            <p className="mt-1 text-sm text-ink-soft">HCLTech</p>
             <p className="annot mt-4 normal-case tracking-[0.06em]">{profile.location}</p>
 
             {profile.availability.open && (

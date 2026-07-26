@@ -68,5 +68,5 @@ export const headlineStats = [
   { value: 4, suffix: "+", label: "Years in enterprise IT", note: "Since 2020" },
   { value: 4500, suffix: "+", label: "Endpoints secured", note: "CrowdStrike migration" },
   { value: 2000, suffix: "+", label: "Devices under Intune", note: "Autopilot · compliance" },
-  { value: 14, suffix: "+", label: "Business units served", note: "Agthia Group" },
+  { value: 14, suffix: "+", label: "Business units served", note: "Current engagement" },
 ] as const;

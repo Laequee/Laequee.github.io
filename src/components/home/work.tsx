@@ -79,8 +79,8 @@ export function Work() {
                         <dd className="mt-1 text-[14px] text-ink-soft">{project.role}</dd>
                       </div>
                       <div>
-                        <dt className="annot">Client</dt>
-                        <dd className="mt-1 text-[14px] text-ink-soft">{project.client}</dd>
+                        <dt className="annot">Scope</dt>
+                        <dd className="mt-1 text-[14px] text-ink-soft">{project.kind}</dd>
                       </div>
                     </dl>
                   )}
