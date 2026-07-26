@@ -4,7 +4,7 @@ import { profile } from "@/content/profile";
 
 export function ProfilePanel() {
   return (
-    <Section index="06" id="profile" title="Profile" lede={profile.summary}>
+    <Section index="05" id="profile" title="Profile" lede={profile.summary}>
       <div className="grid gap-px border border-rule bg-rule lg:grid-cols-2">
         <Reveal className="bg-bg">
           <div className="h-full px-5 py-6 sm:px-6 sm:py-7">

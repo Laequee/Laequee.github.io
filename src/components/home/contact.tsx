@@ -6,7 +6,7 @@ import { profile } from "@/content/profile";
 export function Contact() {
   return (
     <Section
-      index="07"
+      index="06"
       id="contact"
       title="Get in touch"
       lede={
