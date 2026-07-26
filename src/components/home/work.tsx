@@ -46,7 +46,7 @@ export function Work() {
                     {project.stack.slice(0, 5).map((tool) => (
                       <li
                         key={tool}
-                        className="border border-rule px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-faint"
+                        className="console-chip px-2 py-0.5"
                       >
                         {tool}
                       </li>

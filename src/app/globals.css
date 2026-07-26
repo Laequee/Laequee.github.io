@@ -207,6 +207,21 @@
   }
 }
 
+/*
+  Stack chip, set as console output to match the ticker.
+  Natural case and tight tracking on purpose — uppercase with wide letter
+  spacing is a design convention, not something a shell ever prints, and it
+  fought the effect the typeface and colour were building.
+*/
+@utility console-chip {
+  font-family: var(--font-console);
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  letter-spacing: 0.03em;
+  color: var(--console);
+  border: 1px solid color-mix(in srgb, var(--console) 22%, transparent);
+}
+
 /* Accent-outlined pill: CV button, social circles, tags. */
 @utility neon-outline {
   border: 1px solid var(--accent);

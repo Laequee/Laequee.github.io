@@ -147,7 +147,7 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
               {project.stack.map((tool) => (
                 <li
                   key={tool}
-                  className="border border-rule bg-bg px-2 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-soft"
+                  className="console-chip bg-bg px-2 py-1"
                 >
                   {tool}
                 </li>
