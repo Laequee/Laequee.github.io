@@ -61,7 +61,7 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
         <span className="font-mono text-[11px] tracking-[0.14em] text-accent">
           Fig.&nbsp;{project.index}
         </span>
-        <h1 className="mt-3 max-w-3xl text-[2rem] font-semibold leading-[1.1] tracking-tight sm:text-5xl">
+        <h1 className="mt-3 max-w-3xl text-[2rem] font-bold leading-[1.1] tracking-tight text-accent sm:text-5xl">
           {project.title}
         </h1>
         <p className="annot mt-3">{project.kind}</p>

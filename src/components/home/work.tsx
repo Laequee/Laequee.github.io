@@ -36,7 +36,12 @@ export function Work() {
                 </div>
 
                 <div className="max-w-2xl">
-                  <h3 className="text-xl font-semibold tracking-tight transition-colors group-hover:text-accent sm:text-2xl">
+                  {/*
+                    Accent by default rather than on hover — the titles are the
+                    thing worth scanning. Hover inverts to ink so the row still
+                    responds; leaving it accent-on-accent would kill the feedback.
+                  */}
+                  <h3 className="text-xl font-bold tracking-tight text-accent transition-colors group-hover:text-ink sm:text-2xl">
                     {project.title}
                   </h3>
                   <p className="annot mt-1.5">{project.kind}</p>
