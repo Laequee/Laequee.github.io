@@ -225,7 +225,7 @@ export const projects: Project[] = [
      */
     metrics: [
       { value: "94%", label: "DC compliance score" },
-      { value: "~70", label: "Servers hardened" },
+      { value: "120+", label: "Servers hardened" },
       { value: "93%", label: "Member server score" },
       { value: "20", label: "GPOs, consolidated" },
     ],
@@ -252,7 +252,7 @@ export const projects: Project[] = [
       {
         step: "Deploy at scale, safely",
         detail:
-          "Built PowerShell tooling for fleet-wide remediation: type-safe registry writes through the Win32 API rather than string-based cmdlets, throttled parallel execution across ~70 servers, per-host CSV audit logging, and a dry-run mode as the default rather than an option. Every domain-wide change went through CAB approval with a documented rollback position.",
+          "Built PowerShell tooling for fleet-wide remediation: type-safe registry writes through the Win32 API rather than string-based cmdlets, throttled parallel execution across 120+ servers, per-host CSV audit logging, and a dry-run mode as the default rather than an option. Every domain-wide change went through CAB approval with a documented rollback position.",
       },
       {
         step: "Verify, and challenge the scanner",
@@ -284,7 +284,7 @@ export const projects: Project[] = [
     ],
     outcome: [
       "94% CIS compliance score on domain controllers and 93% on the member server baseline under independent Qualys assessment.",
-      "~70 Windows servers brought under a governed, version-controlled baseline instead of individual configuration drift.",
+      "120+ Windows servers brought under a governed, version-controlled baseline instead of individual configuration drift.",
       "Group Policy reduced to 20 defined, scoped policies with documented precedence.",
       "Every unremediated finding carries a written justification, a dependency map and a remediation roadmap — an audit position rather than an open gap.",
       "Domain-wide security auditing enabled and verified persistent across reboots, closing a blind spot where authentication events were going unrecorded.",

@@ -42,7 +42,7 @@ export const experience: Role[] = [
       "Executed the CrowdStrike tenant migration across 7 AD domains and 4,500+ endpoints.",
       "Designed endpoint management at scale — Intune, Autopilot, compliance baselines, BitLocker, and LAPS across 2,000+ devices.",
       "Led the Active Directory consolidation programme, raising the forest functional level from Windows Server 2008 to 2025, moving SYSVOL off FRS, and decommissioning eight legacy domain controllers.",
-      "Hardened the domain controller estate to a 94% CIS Benchmark compliance score under independent Qualys assessment, across ~70 Windows servers.",
+      "Hardened the domain controller estate to a 94% CIS Benchmark compliance score under independent Qualys assessment, across 120+ Windows servers.",
       "Upgraded Entra Connect, including a source anchor transition to mS-DS-ConsistencyGuid, without breaking hybrid identity.",
       "Delivered Microsoft 365 tenant-to-tenant migrations, onboarding newly acquired entities into the corporate tenant and domain.",
       "Migrated multi-terabyte file servers to SharePoint Online for head office and four operating companies.",
