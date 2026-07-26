@@ -30,7 +30,7 @@ export const profile = {
     "Identity · Endpoint Management · Security",
     "Automation · Microsoft 365 · Azure",
   ],
-  location: "Al Zahiyah, Abu Dhabi, UAE",
+  location: "Abu Dhabi, UAE",
 
   intro:
     "I build and consolidate the identity, endpoint, and collaboration layers that large organisations run on — tenant migrations, Active Directory consolidation, Intune at scale, and the Zero Trust controls that hold it together.",

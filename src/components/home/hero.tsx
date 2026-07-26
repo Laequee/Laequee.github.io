@@ -110,14 +110,17 @@ export function Hero() {
               {/*
                 Two hand-broken lines rather than one wrapping paragraph, so the
                 grouping is deliberate instead of whatever the column width
-                happens to produce. Location is omitted here — it already
-                appears in the availability line below, the contact panel, and
-                the footer.
+                happens to produce.
               */}
               <div className="mt-7 text-[13.5px] leading-relaxed text-ink-soft sm:text-[15px]">
                 {profile.disciplineLines.map((line) => (
                   <p key={line}>{line}</p>
                 ))}
+                <p className="mt-2 flex items-center justify-center gap-1.5 text-ink-faint xl:justify-start">
+                  {/* Decorative — the text beside it already says the location. */}
+                  <span aria-hidden="true">📍</span>
+                  {profile.location}
+                </p>
               </div>
             </Reveal>
 
