@@ -66,12 +66,17 @@ export const profile = {
   },
 
   /*
-   * The hero portrait flips between these on click. Currently one caricature
-   * re-tinted four ways — drop real alternates in and the switcher takes any
-   * number of entries without further change.
+   * The hero portrait flips between these on click, in array order — index 0 is
+   * what loads, index 1 is the first click, and so on. The switcher takes any
+   * number of entries, so new artwork is a one-line insert at the position you
+   * want it revealed.
+   *
+   * The trailing three are still the same caricature re-tinted; replace them as
+   * real alternates arrive.
    */
   avatars: [
-    { src: "/avatar-violet.png", mood: "violet" },
+    { src: "/avatar-violet.png", mood: "caricature" },
+    { src: "/avatar-vector.jpg", mood: "vector portrait" },
     { src: "/avatar-teal.png", mood: "teal" },
     { src: "/avatar-rose.png", mood: "rose" },
     { src: "/avatar-slate.png", mood: "slate" },
