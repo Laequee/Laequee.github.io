@@ -59,6 +59,18 @@ export const profile = {
     hasCv: false,
   },
 
+  /*
+   * The hero portrait flips between these on click. Currently one caricature
+   * re-tinted four ways — drop real alternates in and the switcher takes any
+   * number of entries without further change.
+   */
+  avatars: [
+    { src: "/avatar-violet.png", mood: "violet" },
+    { src: "/avatar-teal.png", mood: "teal" },
+    { src: "/avatar-rose.png", mood: "rose" },
+    { src: "/avatar-slate.png", mood: "slate" },
+  ],
+
   education: {
     degree: "BCA, Computer Science",
     institution: "Calicut University",
