@@ -44,14 +44,13 @@ export type Avatar = {
  */
 const avatars: Avatar[] = [
   { src: "/avatar-scene.jpg", mood: "on location" },
-  /*
-   * The subject sits inside a pale disc covering about 57% of a white square.
-   * Left alone, the circular frame would crop that to a white ring around a
-   * smaller disc. 1.72 scales the disc out to the frame edge, which also
-   * matches how the caricatures read — subject on a solid colour field.
-   */
-  { src: "/avatar-headshot.jpg", mood: "headshot", zoom: 1.72 },
   { src: "/avatar-teal.png", mood: "teal" },
+  /*
+   * Deliberately unzoomed. The subject sits inside a pale disc covering about
+   * 57% of a white square, so the frame shows that disc small, ringed in white.
+   * A zoom of ~1.72 would push it out to the edge if that's ever wanted.
+   */
+  { src: "/avatar-headshot.jpg", mood: "headshot" },
   { src: "/avatar-rose.png", mood: "rose" },
   { src: "/avatar-slate.png", mood: "slate" },
 ];
