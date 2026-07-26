@@ -38,7 +38,13 @@
   */
   --console: #16c60c;
 
-  --grid: rgba(255, 255, 255, 0.032);
+  /* 0.032 was invisible on most displays; the squares need to actually read. */
+  --grid: rgba(255, 255, 255, 0.055);
+  --grid-cell: 88px;
+
+  /* Parked offscreen until PointerGlow reports a real position. */
+  --mx: -9999px;
+  --my: -9999px;
 }
 
 @theme inline {
@@ -167,7 +173,15 @@
   }
 
   body {
-    background-color: var(--bg);
+    /*
+      Deliberately no background-color here — html carries it.
+
+      body is position: relative, so an opaque background on it paints over
+      every negative z-index child. The grid layers sit at -10 and were being
+      hidden completely; the background has looked flat black since the neon
+      redesign for exactly this reason. html's background propagates to the
+      canvas, which paints below the grid rather than above it.
+    */
     color: var(--ink);
     font-family: var(--font-jetbrains), ui-monospace, monospace;
     -webkit-font-smoothing: antialiased;
@@ -239,12 +253,49 @@
   color: var(--ink-faint);
 }
 
-/* Faint graph paper. Fixed, so the page scrolls across it. */
+/*
+  Graph paper. Fixed, so the page scrolls across it.
+  88px rather than 64 — at the smaller size the lattice read as texture
+  instead of squares, which was the whole point of having it.
+*/
 @utility neon-grid {
   background-image:
     linear-gradient(var(--grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 64px 64px;
+  background-size: var(--grid-cell) var(--grid-cell);
+}
+
+/*
+  The same lattice in the accent, revealed only around the pointer.
+  --mx/--my come from PointerGlow; they start far offscreen so nothing shows
+  until the pointer has actually moved.
+
+  Alignment matters: this must share --grid-cell and background-position with
+  the base grid, or the two lattices sit a fraction out and the reveal looks
+  like a printing error rather than the same grid lighting up.
+*/
+@utility neon-grid-lit {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--accent) 26%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 26%, transparent) 1px, transparent 1px);
+  background-size: var(--grid-cell) var(--grid-cell);
+  mask-image: radial-gradient(
+    circle 260px at var(--mx) var(--my),
+    #000 0%,
+    rgba(0, 0, 0, 0.45) 45%,
+    transparent 72%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle 260px at var(--mx) var(--my),
+    #000 0%,
+    rgba(0, 0, 0, 0.45) 45%,
+    transparent 72%
+  );
+
+  /* Touch devices have no hover to reveal it, so it would just never appear. */
+  @media (pointer: coarse) {
+    display: none;
+  }
 }
 
 /* Underline sweeping in from the left — the standard link hover. */

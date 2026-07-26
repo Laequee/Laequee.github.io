@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cascadia_Code, Inter, JetBrains_Mono } from "next/font/google";
 
+import { PointerGlow } from "@/components/pointer-glow";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { profile } from "@/content/profile";
@@ -94,15 +95,23 @@ export default function RootLayout({
       className={`${jetbrains.variable} ${inter.variable} ${cascadia.variable} h-full`}
     >
       <body className="relative flex min-h-full flex-col antialiased">
-        {/* Grid field, masked so it fades away from the edges. */}
+        {/*
+          Two lattices, same cell size and origin so they line up exactly.
+          The base sits behind the hero and fades outward; the lit layer is
+          invisible until the pointer moves across it.
+        */}
         <div
           aria-hidden="true"
           className="neon-grid pointer-events-none fixed inset-0 -z-10"
           style={{
-            maskImage: "radial-gradient(ellipse at 50% 0%, #000 10%, transparent 80%)",
-            WebkitMaskImage: "radial-gradient(ellipse at 50% 0%, #000 10%, transparent 80%)",
+            maskImage:
+              "radial-gradient(ellipse 78% 62% at 50% 20%, #000 22%, transparent 78%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 78% 62% at 50% 20%, #000 22%, transparent 78%)",
           }}
         />
+        <div aria-hidden="true" className="neon-grid-lit pointer-events-none fixed inset-0 -z-10" />
+        <PointerGlow />
         <SiteNav />
         <main className="flex-1">{children}</main>
         <SiteFooter />
