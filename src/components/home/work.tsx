@@ -13,8 +13,8 @@ export function Work() {
     <Section
       index="01"
       id="work"
-      title="Selected work"
-      lede="Migration and consolidation programmes across identity, endpoint, and collaboration. Each entry opens a full case study."
+      title="Enterprise Projects"
+      lede="Enterprise engineering projects spanning cloud identity, endpoint management, infrastructure modernization, security, automation, and large-scale migration initiatives."
     >
       <ul className="border-t border-rule">
         {projects.map((project, i) => {
