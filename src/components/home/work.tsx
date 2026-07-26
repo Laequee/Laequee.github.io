@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Reveal } from "@/components/blueprint/reveal";
 import { Section } from "@/components/blueprint/rules";
+import { JellyPill } from "@/components/jelly-pill";
 import { projects } from "@/content/projects";
 
 /**
@@ -85,7 +86,7 @@ export function Work() {
                       </div>
                     </dl>
                   )}
-                  <span className="jelly-cta mt-5 inline-flex items-center gap-2.5 whitespace-nowrap rounded-full px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em]">
+                  <JellyPill className="jelly-cta mt-5 inline-flex items-center gap-2.5 whitespace-nowrap rounded-full px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em]">
                     View full case study
                     <span
                       aria-hidden="true"
@@ -93,7 +94,7 @@ export function Work() {
                     >
                       →
                     </span>
-                  </span>
+                  </JellyPill>
                 </div>
               </div>
             </Link>
