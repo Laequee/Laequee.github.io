@@ -59,74 +59,8 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    slug: "crowdstrike-tenant-migration",
-    index: "01",
-    title: "CrowdStrike Tenant Migration",
-    kind: "Endpoint security · Enterprise migration",
-    client: "Enterprise client",
-    employer: "HCLTech",
-    period: "2025",
-    role: "Migration lead",
-    featured: true,
-    summary:
-      "Moved an entire group's endpoint protection estate onto a single CrowdStrike tenant, spanning seven Active Directory domains and 4,500+ endpoints, without interrupting protection.",
-    metrics: [
-      { value: "4,500+", label: "Endpoints migrated" },
-      { value: "7", label: "AD domains in scope" },
-      { value: "—", label: "Migration window", pending: true },
-      { value: "—", label: "Downtime taken", pending: true },
-    ],
-    context: [
-      "Endpoint protection was split across separate tenants, one per acquired entity. Seven Active Directory domains meant seven consoles, seven policy sets, and no single view of the group's security posture.",
-      "Detections could not be correlated across entities, and reporting to leadership meant manually stitching together exports. Any group-wide response to an incident was slow by construction.",
-    ],
-    approach: [
-      {
-        step: "Inventory and reconcile",
-        detail:
-          "Built a full endpoint inventory across all seven domains, reconciled against Intune and AD records, and identified stale, duplicate, and unmanaged devices before touching anything.",
-      },
-      {
-        step: "Stage the target tenant",
-        detail:
-          "Prepared the destination tenant with host groups, prevention policies, and sensor update policies mapped to the existing per-entity configurations, so no device lost coverage on cutover.",
-      },
-      {
-        step: "Phased sensor migration",
-        detail:
-          "Migrated in waves by domain and business unit, using scripted sensor re-registration with maintenance tokens. Each wave was validated before the next began.",
-      },
-      {
-        step: "Validate and decommission",
-        detail:
-          "Confirmed check-in, policy application, and detection telemetry per wave, then retired the source tenants once every endpoint reported clean.",
-      },
-    ],
-    outcome: [
-      "A single console covering the whole group, with consistent prevention policy across every entity.",
-      "Detections correlate across business units for the first time, and group-level reporting comes straight from the console.",
-      "Legacy tenants decommissioned, removing duplicate licensing and administrative overhead.",
-    ],
-    stack: ["CrowdStrike Falcon", "Active Directory", "Intune", "PowerShell", "Microsoft Graph"],
-    diagram: {
-      caption: "Seven source tenants consolidated into one",
-      layers: [
-        { label: "Before", nodes: ["Domain A", "Domain B", "Domain C", "+4 more"] },
-        { label: "Migration", nodes: ["Inventory", "Staging", "Wave cutover", "Validation"] },
-        { label: "After", nodes: ["Single Falcon tenant"] },
-      ],
-    },
-    needs: [
-      "How long the migration ran end to end",
-      "Downtime or protection gap taken, if any",
-      "How many users were affected",
-      "Whether you led it outright or executed under someone else's plan",
-    ],
-  },
-
-  {
     slug: "active-directory-consolidation",
-    index: "02",
+    index: "01",
     title: "Active Directory Consolidation",
     kind: "Directory services · Hybrid identity · Infrastructure modernisation",
     client: "Enterprise client",
@@ -274,7 +208,7 @@ export const projects: Project[] = [
 
   {
     slug: "ad-security-hardening",
-    index: "03",
+    index: "02",
     title: "Active Directory Security Hardening",
     kind: "Security & compliance · CIS Benchmarks",
     client: "Enterprise client",
@@ -390,6 +324,72 @@ export const projects: Project[] = [
       "security auditing",
     ],
     needs: [],
+  },
+
+  {
+    slug: "crowdstrike-tenant-migration",
+    index: "03",
+    title: "CrowdStrike Tenant Migration",
+    kind: "Endpoint security · Enterprise migration",
+    client: "Enterprise client",
+    employer: "HCLTech",
+    period: "2025",
+    role: "Migration lead",
+    featured: true,
+    summary:
+      "Moved an entire group's endpoint protection estate onto a single CrowdStrike tenant, spanning seven Active Directory domains and 4,500+ endpoints, without interrupting protection.",
+    metrics: [
+      { value: "4,500+", label: "Endpoints migrated" },
+      { value: "7", label: "AD domains in scope" },
+      { value: "—", label: "Migration window", pending: true },
+      { value: "—", label: "Downtime taken", pending: true },
+    ],
+    context: [
+      "Endpoint protection was split across separate tenants, one per acquired entity. Seven Active Directory domains meant seven consoles, seven policy sets, and no single view of the group's security posture.",
+      "Detections could not be correlated across entities, and reporting to leadership meant manually stitching together exports. Any group-wide response to an incident was slow by construction.",
+    ],
+    approach: [
+      {
+        step: "Inventory and reconcile",
+        detail:
+          "Built a full endpoint inventory across all seven domains, reconciled against Intune and AD records, and identified stale, duplicate, and unmanaged devices before touching anything.",
+      },
+      {
+        step: "Stage the target tenant",
+        detail:
+          "Prepared the destination tenant with host groups, prevention policies, and sensor update policies mapped to the existing per-entity configurations, so no device lost coverage on cutover.",
+      },
+      {
+        step: "Phased sensor migration",
+        detail:
+          "Migrated in waves by domain and business unit, using scripted sensor re-registration with maintenance tokens. Each wave was validated before the next began.",
+      },
+      {
+        step: "Validate and decommission",
+        detail:
+          "Confirmed check-in, policy application, and detection telemetry per wave, then retired the source tenants once every endpoint reported clean.",
+      },
+    ],
+    outcome: [
+      "A single console covering the whole group, with consistent prevention policy across every entity.",
+      "Detections correlate across business units for the first time, and group-level reporting comes straight from the console.",
+      "Legacy tenants decommissioned, removing duplicate licensing and administrative overhead.",
+    ],
+    stack: ["CrowdStrike Falcon", "Active Directory", "Intune", "PowerShell", "Microsoft Graph"],
+    diagram: {
+      caption: "Seven source tenants consolidated into one",
+      layers: [
+        { label: "Before", nodes: ["Domain A", "Domain B", "Domain C", "+4 more"] },
+        { label: "Migration", nodes: ["Inventory", "Staging", "Wave cutover", "Validation"] },
+        { label: "After", nodes: ["Single Falcon tenant"] },
+      ],
+    },
+    needs: [
+      "How long the migration ran end to end",
+      "Downtime or protection gap taken, if any",
+      "How many users were affected",
+      "Whether you led it outright or executed under someone else's plan",
+    ],
   },
 
   {
