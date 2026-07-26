@@ -52,10 +52,10 @@ export const profile = {
    * Until then the hero renders a monogram plate and the CV links are hidden,
    * rather than shipping links that 404.
    */
-  photo: "/laeque.jpg",
+  photo: "/laeque.png",
   cv: "/mohammed-laeque-cv.pdf",
   assets: {
-    hasPhoto: false,
+    hasPhoto: true,
     hasCv: false,
   },
 

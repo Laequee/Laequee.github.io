@@ -45,10 +45,14 @@ const BG = "#05070f";
 const RULE = "#1a2236";
 
 export default async function OpenGraphImage() {
-  const [bold, regular] = await Promise.all([
+  const [bold, regular, avatar] = await Promise.all([
     readFile(join(process.cwd(), "src/assets/JetBrainsMono-Bold.ttf")),
     readFile(join(process.cwd(), "src/assets/JetBrainsMono-Regular.ttf")),
+    readFile(join(process.cwd(), "public/laeque.png")),
   ]);
+
+  // satori has no filesystem access — the avatar has to be inlined.
+  const avatarUri = `data:image/png;base64,${avatar.toString("base64")}`;
 
   return new ImageResponse(
     (
@@ -85,19 +89,25 @@ export default async function OpenGraphImage() {
             </span>
           </div>
 
-          {/* Echo of the hero's dashed ring. */}
+          {/* Echo of the hero's dashed ring, with the same portrait inside it. */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: 150,
-              height: 150,
-              borderRadius: 150,
+              width: 176,
+              height: 176,
+              borderRadius: 176,
               border: `4px dashed ${ACCENT}`,
             }}
           >
-            <span style={{ fontSize: 52, fontWeight: 700, color: ACCENT }}>{profile.initials}</span>
+            <img
+              src={avatarUri}
+              width={148}
+              height={148}
+              style={{ borderRadius: 148 }}
+              alt=""
+            />
           </div>
         </div>
 
