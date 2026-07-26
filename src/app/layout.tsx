@@ -19,6 +19,18 @@ const inter = Inter({
   display: "swap",
 });
 
+/*
+ * The share card is a committed PNG rather than Next's opengraph-image.tsx
+ * convention. Under `output: "export"` that convention emits the file as
+ * `out/opengraph-image` with no extension, and GitHub Pages assigns MIME types
+ * by extension — it would be served as application/octet-stream and every
+ * crawler would reject it. A real .png in /public is unambiguous everywhere.
+ *
+ * Regenerate with tools/og-card.tsx; the header comment there has the steps.
+ */
+const OG_IMAGE = "/og.png";
+const OG_ALT = `${profile.name} — ${profile.headline}`;
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://laequee.github.io"),
   title: {
@@ -43,8 +55,21 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${profile.name} — ${profile.headline}`,
     description: profile.intro,
+    url: "https://laequee.github.io",
+    siteName: profile.name,
     type: "website",
     locale: "en_AE",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: OG_ALT }],
+  },
+  /*
+   * summary_large_image, not the default summary — with a bare `summary` card
+   * and no image, every LinkedIn or Slack share renders as a grey box.
+   */
+  twitter: {
+    card: "summary_large_image",
+    title: `${profile.name} — ${profile.headline}`,
+    description: profile.intro,
+    images: [{ url: OG_IMAGE, alt: OG_ALT }],
   },
   robots: { index: true, follow: true },
 };
