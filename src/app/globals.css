@@ -155,59 +155,6 @@
   }
 }
 
-/*
-  LEGACY SKIN
-  Applied while the home page is still pre-cutover. Colours are interpolated
-  from JS; everything here is the stuff that cannot sensibly be interpolated —
-  a half-rounded corner or a half-serif font just reads as a rendering bug.
-
-  Scoped entirely under [data-era="legacy"], so the modern site is untouched
-  and removing the attribute removes the skin.
-*/
-[data-era="legacy"] body {
-  font-family: Tahoma, "MS Sans Serif", Verdana, Geneva, sans-serif;
-  letter-spacing: 0;
-}
-
-/* Square everything. Pills and circles did not exist in a 2003 admin console. */
-[data-era="legacy"] *:not(svg):not(svg *) {
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  text-shadow: none !important;
-}
-
-/* Bevelled controls, drawn the way Win32 drew them. */
-[data-era="legacy"] a[class*="neon-outline"],
-[data-era="legacy"] button[class*="neon-outline"] {
-  background: #d4d0c8 !important;
-  color: #000 !important;
-  border: 2px outset #f0eee8 !important;
-  font-weight: 400;
-}
-
-/* The dashed neon ring has no business in this era. */
-[data-era="legacy"] .animate-ring {
-  opacity: 0;
-}
-
-/* Sunken photo frame instead. */
-[data-era="legacy"] .era-portrait {
-  border: 2px inset #d4d0c8 !important;
-  background: #ffffff !important;
-}
-
-/* Tighter, denser rhythm — old consoles did not breathe. */
-[data-era="legacy"] h1,
-[data-era="legacy"] h2,
-[data-era="legacy"] h3 {
-  letter-spacing: 0;
-  font-weight: 700;
-}
-
-[data-era="legacy"] .annot {
-  letter-spacing: 0.02em;
-}
-
 /* Long-form reading only — case study context, approach, outcome. */
 @utility prose-face {
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;

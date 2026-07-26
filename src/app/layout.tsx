@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
-import { Migration } from "@/components/era/migration";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { profile } from "@/content/profile";
@@ -79,38 +78,11 @@ export const viewport = {
   themeColor: "#05070f",
 };
 
-/*
- * Paints the legacy palette before first paint on the home page, so the
- * migration starts where it should. Without this the static HTML renders
- * modern and then snaps backwards the moment React hydrates.
- *
- * Kept deliberately small and duplicated from palettes.ts — it has to run
- * before any module loads, so it cannot import.
- */
-const legacyBootScript = `
-try {
-  if (location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches && scrollY < 4) {
-    var s = document.documentElement.style;
-    var p = {'--bg':'#ece9d8','--surface':'#ffffff','--surface-2':'#d4d0c8','--ink':'#000000',
-      '--ink-soft':'#3b3b3b','--ink-faint':'#67645d','--rule':'#aca899','--rule-strong':'#808080',
-      '--accent':'#0a246a','--accent-ink':'#ffffff','--accent-warm':'#7a0000',
-      '--accent-wash':'rgba(10,36,106,0.08)','--accent-line':'rgba(10,36,106,0.45)',
-      '--accent-glow':'rgba(10,36,106,0)','--grid':'rgba(0,0,0,0.05)'};
-    for (var k in p) s.setProperty(k, p[k]);
-    s.setProperty('--era', '0');
-    document.documentElement.dataset.era = 'legacy';
-  }
-} catch (e) {}
-`;
-
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${jetbrains.variable} ${inter.variable} h-full`}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: legacyBootScript }} />
-      </head>
       <body className="relative flex min-h-full flex-col antialiased">
         {/* Grid field, masked so it fades away from the edges. */}
         <div
@@ -121,7 +93,6 @@ export default function RootLayout({
             WebkitMaskImage: "radial-gradient(ellipse at 50% 0%, #000 10%, transparent 80%)",
           }}
         />
-        <Migration />
         <SiteNav />
         <main className="flex-1">{children}</main>
         <SiteFooter />
