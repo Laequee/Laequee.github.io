@@ -31,6 +31,13 @@
   */
   --accent-warm: #ff5fa2;
 
+  /*
+    PowerShell green. Windows Terminal's Campbell brightGreen — the actual
+    value a console paints Write-Host -ForegroundColor Green. Measures 8.29:1
+    on the ticker surface. The legacy #00FF00 was too harsh next to the cyan.
+  */
+  --console: #16c60c;
+
   --grid: rgba(255, 255, 255, 0.032);
 }
 
@@ -48,8 +55,17 @@
   --color-accent-wash: var(--accent-wash);
   --color-accent-line: var(--accent-line);
   --color-accent-warm: var(--accent-warm);
+  --color-console: var(--console);
 
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  /*
+    Cascadia Code — Microsoft's own terminal typeface, what PowerShell and
+    Windows Terminal actually ship with. Consolas and Lucida Console follow as
+    local fallbacks, since most of the audience is on Windows and already has
+    them installed.
+  */
+  --font-console: var(--font-cascadia), "Cascadia Mono", Consolas, "Lucida Console",
+    ui-monospace, monospace;
   /* Reserved for multi-paragraph prose, where full monospace gets tiring. */
   --font-prose: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
