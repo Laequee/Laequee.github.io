@@ -1,0 +1,127 @@
+import type { Metadata } from "next";
+import { Cascadia_Code, Inter, JetBrains_Mono } from "next/font/google";
+
+import { PointerGlow } from "@/components/pointer-glow";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteNav } from "@/components/site-nav";
+import { profile } from "@/content/profile";
+import "./globals.css";
+
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/* Prose only — long case-study paragraphs, where full monospace gets tiring. */
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/* The ticker only — Microsoft's terminal typeface, for the console line. */
+const cascadia = Cascadia_Code({
+  variable: "--font-cascadia",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/*
+ * The share card is a committed PNG rather than Next's opengraph-image.tsx
+ * convention. Under `output: "export"` that convention emits the file as
+ * `out/opengraph-image` with no extension, and GitHub Pages assigns MIME types
+ * by extension — it would be served as application/octet-stream and every
+ * crawler would reject it. A real .png in /public is unambiguous everywhere.
+ *
+ * Regenerate with tools/og-card.tsx; the header comment there has the steps.
+ */
+const OG_IMAGE = "/og.png";
+const OG_ALT = `${profile.name} — ${profile.headline}`;
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://laequee.github.io"),
+  title: {
+    default: `${profile.name} — ${profile.headline}`,
+    template: `%s — ${profile.name}`,
+  },
+  description: profile.intro,
+  keywords: [
+    "Mohammed Laeque",
+    "Cloud Security Engineer",
+    "Endpoint Security Engineer",
+    "CrowdStrike Falcon",
+    "Microsoft 365",
+    "Intune",
+    "Entra ID",
+    "Conditional Access",
+    "Active Directory",
+    "Endpoint Management",
+    "Vulnerability Management",
+    "Qualys",
+    "CIS Benchmarks",
+    "Zero Trust",
+    "Tenant Migration",
+    "Abu Dhabi",
+    "UAE",
+  ],
+  authors: [{ name: profile.name }],
+  openGraph: {
+    title: `${profile.name} — ${profile.headline}`,
+    description: profile.intro,
+    url: "https://laequee.github.io",
+    siteName: profile.name,
+    type: "website",
+    locale: "en_AE",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: OG_ALT }],
+  },
+  /*
+   * summary_large_image, not the default summary — with a bare `summary` card
+   * and no image, every LinkedIn or Slack share renders as a grey box.
+   */
+  twitter: {
+    card: "summary_large_image",
+    title: `${profile.name} — ${profile.headline}`,
+    description: profile.intro,
+    images: [{ url: OG_IMAGE, alt: OG_ALT }],
+  },
+  robots: { index: true, follow: true },
+};
+
+export const viewport = {
+  themeColor: "#05070f",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html
+      lang="en"
+      className={`${jetbrains.variable} ${inter.variable} ${cascadia.variable} h-full`}
+    >
+      <body className="relative flex min-h-full flex-col antialiased">
+        {/*
+          Two lattices, same cell size and origin so they line up exactly.
+          The base sits behind the hero and fades outward; the lit layer is
+          invisible until the pointer moves across it.
+        */}
+        <div
+          aria-hidden="true"
+          className="neon-grid pointer-events-none fixed inset-0 -z-10"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 78% 62% at 50% 20%, #000 22%, transparent 78%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 78% 62% at 50% 20%, #000 22%, transparent 78%)",
+          }}
+        />
+        <div aria-hidden="true" className="neon-grid-lit pointer-events-none fixed inset-0 -z-10" />
+        <PointerGlow />
+        <SiteNav />
+        <main className="flex-1">{children}</main>
+        <SiteFooter />
+      </body>
+    </html>
+  );
+}

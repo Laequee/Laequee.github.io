@@ -1,0 +1,178 @@
+/*
+ * GENERATOR for public/og.png — deliberately not part of the app build.
+ *
+ * As a route under `output: "export"` this emits `out/opengraph-image` with no
+ * file extension. GitHub Pages assigns MIME types by extension, so that file is
+ * served as application/octet-stream and crawlers reject it. The card is
+ * therefore committed as a real .png and referenced explicitly in layout.tsx.
+ *
+ * To regenerate after changing the name, stats, or palette:
+ *   1. cp tools/og-card.tsx src/app/opengraph-image.tsx
+ *   2. npm run build
+ *   3. cp out/opengraph-image public/og.png
+ *   4. rm src/app/opengraph-image.tsx
+ *   5. npm run build      # so the HTML stops referencing the route
+ */
+
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
+import { ImageResponse } from "next/og";
+
+import { headlineLines, headlineStats, profile } from "@/content/profile";
+
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+export const alt = `${profile.name} — ${profile.headline}`;
+
+/* Required under output: "export" — the image is rendered once at build time. */
+export const dynamic = "force-static";
+
+/*
+ * Share card for LinkedIn, X, Slack, WhatsApp.
+ *
+ * Rendered by satori, which supports a subset of CSS: flexbox only (no grid),
+ * and any element with more than one child needs an explicit display value.
+ * The site's tokens are CSS custom properties and are not available here, so
+ * the palette is repeated as literals — keep these in step with globals.css.
+ */
+const INK = "#ffffff";
+const INK_SOFT = "#a8b3c7";
+const INK_FAINT = "#6b7891";
+const ACCENT = "#00e5ff";
+const NAME = "#ff5fa2";
+const BG = "#05070f";
+const RULE = "#1a2236";
+
+export default async function OpenGraphImage() {
+  const [bold, regular, avatar] = await Promise.all([
+    readFile(join(process.cwd(), "src/assets/JetBrainsMono-Bold.ttf")),
+    readFile(join(process.cwd(), "src/assets/JetBrainsMono-Regular.ttf")),
+    readFile(join(process.cwd(), "public/laeque.png")),
+  ]);
+
+  // satori has no filesystem access — the avatar has to be inlined.
+  const avatarUri = `data:image/png;base64,${avatar.toString("base64")}`;
+
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          backgroundColor: BG,
+          // Graph paper, matching the site's fixed grid field.
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+          padding: "68px 72px",
+          fontFamily: "JetBrains Mono",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", alignItems: "baseline" }}>
+              <span style={{ fontSize: 40, fontWeight: 700, color: NAME }}>{profile.name}</span>
+              <span style={{ fontSize: 22, color: INK_FAINT, marginLeft: 18 }}>
+                · {profile.title}
+              </span>
+            </div>
+
+            {/*
+              The same lines the hero renders, from the same source — written out
+              here once and they drift the moment the headline changes.
+              At 54px, 17 monospace characters clears the portrait ring.
+            */}
+            {headlineLines.map((line, i) => (
+              <span
+                key={line.text}
+                style={{
+                  fontSize: 54,
+                  fontWeight: 700,
+                  color: line.accent ? ACCENT : INK,
+                  marginTop: i === 0 ? 22 : 2,
+                }}
+              >
+                {line.text}
+              </span>
+            ))}
+          </div>
+
+          {/* Echo of the hero's dashed ring, with the same portrait inside it. */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 176,
+              height: 176,
+              borderRadius: 176,
+              border: `4px dashed ${ACCENT}`,
+            }}
+          >
+            <img
+              src={avatarUri}
+              width={148}
+              height={148}
+              style={{ borderRadius: 148 }}
+              alt=""
+            />
+          </div>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {/*
+            The URL sits on the discipline row, not alongside the stats. Sharing
+            a row with four stat labels overflowed the card and clipped it at the
+            right edge — there is no room for a fifth column at this width.
+          */}
+          {/*
+            The same two lines the hero uses. As one string it overflowed the
+            space left by the URL sharing this row and orphaned "Azure".
+          */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {profile.disciplineLines.map((line) => (
+                <span key={line} style={{ fontSize: 21, color: INK_SOFT, lineHeight: 1.5 }}>
+                  {line}
+                </span>
+              ))}
+            </div>
+            <span style={{ fontSize: 20, color: ACCENT }}>laequee.github.io</span>
+          </div>
+
+          <div style={{ display: "flex", height: 1, backgroundColor: RULE, margin: "30px 0" }} />
+
+          <div style={{ display: "flex" }}>
+            {headlineStats.map((stat, i) => (
+              <div
+                key={stat.label}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginLeft: i === 0 ? 0 : 44,
+                }}
+              >
+                <span style={{ fontSize: 38, fontWeight: 700, color: INK }}>
+                  {stat.value.toLocaleString("en-US")}
+                  {stat.suffix}
+                </span>
+                <span style={{ fontSize: 16, color: INK_FAINT, marginTop: 6 }}>{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+    {
+      ...size,
+      fonts: [
+        { name: "JetBrains Mono", data: bold, weight: 700, style: "normal" },
+        { name: "JetBrains Mono", data: regular, weight: 400, style: "normal" },
+      ],
+    },
+  );
+}
