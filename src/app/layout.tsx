@@ -48,8 +48,8 @@ export const metadata: Metadata = {
   description: profile.intro,
   keywords: [
     "Mohammed Laeque",
-    "Cloud Security Engineer",
-    "Endpoint Security Engineer",
+    "Microsoft 365 Engineer",
+    "Digital Workplace Specialist",
     "CrowdStrike Falcon",
     "Microsoft 365",
     "Intune",

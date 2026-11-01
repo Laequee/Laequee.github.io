@@ -28,7 +28,7 @@ export type Role = {
 
 export const experience: Role[] = [
   {
-    title: "Security, Identity & Endpoint Engineer",
+    title: "System Specialist / Digital Workplace Specialist",
     employer: "HCLTech",
     client: "Multinational food & beverage group",
     period: "Nov 2024 — Present",
@@ -37,9 +37,9 @@ export const experience: Role[] = [
     location: "Abu Dhabi, UAE",
     current: true,
     summary:
-      "Core security, identity and endpoint engineer for the group's Microsoft cloud platform — a single Entra ID tenant over a multi-domain, multi-forest Active Directory estate of 5,000+ identities, 4,000+ mailboxes, 3,700+ managed devices, 2,500+ endpoint security sensors and 2,000+ SharePoint sites.",
+      "Digital workplace, identity and endpoint specialist for the group's Microsoft cloud platform — a single Entra ID tenant over a multi-domain, multi-forest Active Directory estate of 5,000+ identities, 4,000+ mailboxes, 3,700+ managed devices, 2,500+ endpoint security sensors and 2,000+ SharePoint sites.",
     highlights: [
-      "Own endpoint detection and response across a 2,500+ sensor CrowdStrike Falcon estate — prevention policy design, host group scoping, IOA/IOC tuning, Real Time Response and Identity Protection.",
+      "Administer a 2,500+ sensor CrowdStrike Falcon estate — prevention policy design, host group scoping, IOA/IOC tuning, Real Time Response and Identity Protection.",
       "Led an enterprise-wide CrowdStrike tenant-to-tenant migration across a multi-domain environment, removing and reinstalling 2,500+ sensors against a fixed licence expiry with no host left on the retired tenant and no service impact.",
       "Deployed Windows Hello for Business passwordless sign-in to 2,800+ hybrid joined devices — 97% of the managed Windows estate — over cloud Kerberos trust, with no PKI, no certificates and no additional spend.",
       "Architected and manage Microsoft Intune for 3,700+ devices: Autopilot provisioning, MDM auto-enrolment, compliance and configuration profiles, BitLocker, Windows LAPS and Win32 packaging.",

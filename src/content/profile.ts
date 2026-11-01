@@ -63,30 +63,30 @@ export const profile = {
   name: "Mohammed Laeque",
   initials: "ML",
   /* Verbatim from the CV's title line, so the two documents introduce the same person. */
-  title: "Cloud & Endpoint Security Engineer",
-  headline: "Cloud, Endpoint & Identity Security Engineering",
+  title: "Digital Workplace Specialist",
+  headline: "Microsoft 365, Intune & Entra ID Engineering",
   /* Single line, for the share card and metadata where wrapping isn't available. */
   discipline:
-    "Endpoint Security · Identity · Microsoft 365 · Vulnerability Management · Automation",
+    "Microsoft 365 · Intune · Entra ID · Active Directory · Automation",
   /* Hand-broken for the hero, where two balanced lines read better than one long one. */
   disciplineLines: [
-    "Endpoint Security · Identity · Microsoft 365",
-    "Vulnerability Management · Automation",
+    "Microsoft 365 · Intune · Entra ID",
+    "Active Directory · Automation",
   ],
   location: "Abu Dhabi, UAE",
 
   intro:
-    "I secure and consolidate the identity, endpoint, and collaboration layers that large organisations run on — endpoint detection and response, Conditional Access and hybrid identity, CIS hardening, and the tenant-scale migrations that get an estate onto one governed platform.",
+    "I run and consolidate the identity, endpoint, and collaboration layers that large organisations depend on — Microsoft 365, Intune, Conditional Access and hybrid identity, and the tenant-scale migrations that get an estate onto one governed platform.",
 
-  summary: `${yearsExperience}+ years delivering enterprise-scale Microsoft 365, endpoint, and hybrid identity work. Accountable for endpoint detection and response, identity and access management, email and data security, vulnerability management, and security hardening across a multi-domain, multi-forest environment of 5,000+ identities and 3,700+ managed devices. The work is Zero Trust and least privilege in practice, measured against CIS, NIST, and ISO 27001 control expectations, and delivered in production hours rather than in maintenance windows.`,
+  summary: `${yearsExperience}+ years delivering enterprise-scale Microsoft 365, Intune endpoint management, and hybrid identity work. Accountable for Microsoft 365 administration, endpoint management, identity and access, and the supporting security tooling across a multi-domain, multi-forest environment of 5,000+ identities and 3,700+ managed devices, delivered in production hours rather than in maintenance windows.`,
 
   /*
    * No badge any more — this only drives the "Looking for" block and the lede
    * in the contact section. Set `open: false` and both disappear.
    */
   availability: {
-    open: false,
-    detail: "",
+    open: true,
+    detail: "Open to roles across the UAE",
   },
 
   contact: {
@@ -140,8 +140,8 @@ export const profile = {
  * comment above HeadlineLine.
  */
 export const headlineLines = [
-  { text: "Cloud, Endpoint &", accent: false },
-  { text: "Identity Security", accent: true },
+  { text: "Microsoft 365,", accent: false },
+  { text: "Intune & Entra ID", accent: true },
   { text: "Engineering", accent: true },
 ] as const;
 
@@ -150,12 +150,12 @@ export const headlineLines = [
  * can run on the numeral alone.
  *
  * Four figures, all from the CV banner. The CV carries two more — 4,000+
- * mailboxes secured and 90%+ CIS compliance — which sit on the case studies
+ * mailboxes managed and 90%+ CIS compliance — which sit on the case studies
  * that earned them rather than competing for space here.
  */
 export const headlineStats = [
   { value: yearsExperience, suffix: "+", label: "Years in Enterprise IT", note: "Since Oct 2020" },
-  { value: 5000, suffix: "+", label: "Identities Secured", note: "Entra ID · multi-forest AD" },
+  { value: 5000, suffix: "+", label: "Identities Managed", note: "Entra ID · multi-forest AD" },
   { value: 3700, suffix: "+", label: "Endpoints Managed", note: "Intune · Autopilot" },
   { value: 2500, suffix: "+", label: "EDR Sensors Operated", note: "CrowdStrike Falcon" },
 ] as const;

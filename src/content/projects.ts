@@ -638,7 +638,7 @@ export const projects: Project[] = [
     client: "Enterprise client",
     employer: "HCLTech",
     period: "2025",
-    role: "Security engineer — email and identity",
+    role: "Email and identity administration",
     featured: true,
     summary:
       "Closed legacy SMTP authentication across 4,000+ mailboxes, restored mailbox auditing to the recommended baseline and doubled audit retention — in production hours, with the exception list reconciled against real send activity rather than against who had asked to be exempted.",
@@ -744,7 +744,7 @@ export const projects: Project[] = [
     client: "Enterprise client",
     employer: "HCLTech",
     period: "2025",
-    role: "Security engineer — assessment and remediation",
+    role: "Assessment and remediation",
     featured: true,
     summary:
       "Turned an 80+ finding SaaS security posture assessment into a prioritised, change-controlled remediation register — and escalated the privileged access findings the vendor had under-rated.",

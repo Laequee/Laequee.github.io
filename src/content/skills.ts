@@ -15,7 +15,7 @@ export type SkillGroup = {
 export const skillGroups: SkillGroup[] = [
   {
     code: "EDR",
-    title: "Endpoint Security",
+    title: "Endpoint Protection",
     items: [
       "CrowdStrike Falcon",
       "Prevention policy & host groups",
@@ -29,14 +29,12 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     code: "SOC",
-    title: "Security Operations",
+    title: "Security Administration",
     items: [
-      "Threat detection & response",
       "Alert triage & containment",
       "Threat hunting",
       "Phishing & BEC investigation",
       "Password spray analysis",
-      "Malware containment & host isolation",
       "Post-incident RCA",
       "Log & audit analysis",
     ],
@@ -74,9 +72,6 @@ export const skillGroups: SkillGroup[] = [
     title: "Frameworks & Governance",
     items: [
       "CIS Benchmarks & Controls",
-      "NIST Cybersecurity Framework",
-      "ISO 27001 control alignment",
-      "MITRE ATT&CK",
       "Zero Trust architecture",
       "Least privilege & defence in depth",
       "Risk & remediation registers",

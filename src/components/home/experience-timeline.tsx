@@ -9,7 +9,7 @@ export function ExperienceTimeline() {
       index="02"
       id="experience"
       title="Experience"
-      lede={`${yearsExperience}+ years across enterprise IT, from workstation builds in Kerala to group-wide security, identity and endpoint engineering in Abu Dhabi.`}
+      lede={`${yearsExperience}+ years across enterprise IT, from workstation builds in Kerala to group-wide Microsoft 365, identity and endpoint work in Abu Dhabi.`}
       raised
     >
       <ol className="relative">
