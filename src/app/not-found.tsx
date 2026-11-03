@@ -2,19 +2,16 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="mx-auto flex max-w-6xl flex-col justify-center px-5 py-32 sm:px-8">
-      <span className="annot">Error 404</span>
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-        Sheet not found
+    <div className="mx-auto flex max-w-6xl flex-col items-start justify-center px-5 py-32 sm:px-8">
+      <span className="pill h-7 px-3 text-ink-soft">404</span>
+      <h1 className="mt-5 font-display text-5xl font-bold tracking-[-0.03em] sm:text-6xl">
+        Nothing wired here
       </h1>
       <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft">
-        That drawing isn&apos;t in the set. It may have been renumbered.
+        This page doesn&apos;t exist, or it was removed when the site was trimmed.
       </p>
-      <Link
-        href="/"
-        className="mt-8 w-fit border border-ink bg-ink px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] text-bg transition-colors hover:border-accent hover:bg-accent"
-      >
-        Back to index
+      <Link href="/" className="btn mt-8 h-11 px-6 text-sm">
+        Back to home
       </Link>
     </div>
   );

@@ -4,69 +4,51 @@ import { courses } from "@/content/courses";
 import { profile } from "@/content/profile";
 
 /*
- * Headed "Courses & Training", not "Certifications" — see the note at the top
- * of content/courses.ts. The #certifications anchor is kept as-is because it is
- * already in shared links and the nav; renaming it would break them for nothing.
+ * "Courses", never "Certifications": see the note at the top of
+ * content/courses.ts. The #certifications anchor is kept for shared links.
  */
 export function Courses() {
   return (
-    <Section
-      index="04"
-      id="certifications"
-      title="Training & Education"
-      lede={`Courses completed. ${profile.education.degree}, ${profile.education.institution} (2020). Languages: ${profile.languages.map((l) => l.name).join(", ")}.`}
-      raised
-    >
-      <ul className="grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
-        {courses.map((course, i) => {
-          const body = (
-            <div className="flex h-full flex-col px-5 py-6">
-              <div className="flex items-start justify-between gap-3">
-                <span className="annot">{course.issuer.split(" — ")[0]}</span>
-                {course.code && (
-                  <span className="border border-rule px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] text-accent">
-                    {course.code}
-                  </span>
-                )}
-              </div>
-              <h3 className="mt-3 text-[15px] font-semibold leading-snug tracking-tight">
-                {course.name}
-              </h3>
-              {/*
-                No date is shown when one isn't known — "to be confirmed" on eight
-                cards reads as an unfinished site rather than a considered omission.
-              */}
-              {(course.issued || course.credentialUrl) && (
-                <p className="annot mt-auto pt-4 normal-case tracking-[0.06em]">
-                  {course.issued}
-                  {course.credentialUrl && (
-                    <span className={course.issued ? "ml-2 text-accent" : "text-accent"}>
-                      Verify →
-                    </span>
-                  )}
-                </p>
-              )}
-            </div>
-          );
+    <Section index="04" id="certifications" title="Training & education">
+      <div className="grid gap-5 lg:grid-cols-[1fr_20rem]">
+        <Reveal className="panel p-6 sm:p-7">
+          <span className="annot">Courses completed</span>
+          <ul className="mt-5 grid gap-x-8 sm:grid-cols-2">
+            {courses.map((course) => (
+              <li key={course.name} className="flex items-baseline gap-3 border-b border-rule py-3">
+                <span className="w-14 shrink-0 font-mono text-[12px] font-semibold text-accent">{course.code}</span>
+                <span className="text-[14px] leading-snug">
+                  {course.name}
+                  <span className="text-ink-faint"> · {course.issuer.split(" — ")[0]}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
 
-          return (
-            <Reveal key={course.name} delay={Math.min(i, 4) * 50} className="bg-bg">
-              {course.credentialUrl ? (
-                <a
-                  href={course.credentialUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block h-full transition-colors hover:bg-surface"
-                >
-                  {body}
-                </a>
-              ) : (
-                body
-              )}
-            </Reveal>
-          );
-        })}
-      </ul>
+        <Reveal delay={80} className="panel flex flex-col gap-7 p-6 sm:p-7">
+          <div>
+            <span className="annot">Education</span>
+            <p className="mt-3 font-display text-lg font-bold leading-snug tracking-tight">
+              {profile.education.degree}
+            </p>
+            <p className="mt-1 text-[14px] text-ink-soft">
+              {profile.education.institution} · {profile.education.period}
+            </p>
+          </div>
+          <div>
+            <span className="annot">Languages</span>
+            <ul className="mt-3 space-y-1.5">
+              {profile.languages.map((language) => (
+                <li key={language.name} className="flex justify-between gap-4 text-[14px]">
+                  <span>{language.name}</span>
+                  <span className="text-ink-faint">{language.level}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
+      </div>
     </Section>
   );
 }

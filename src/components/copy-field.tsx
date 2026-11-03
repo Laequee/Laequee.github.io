@@ -6,6 +6,8 @@ type CopyFieldProps = {
   label: string;
   value: string;
   href: string;
+  /* What the Copy button copies, when the shown text is a label rather than the value. */
+  copyValue?: string;
 };
 
 /**
@@ -13,7 +15,7 @@ type CopyFieldProps = {
  * action; copying is a secondary button so the clipboard permission never
  * gets in the way of just clicking through.
  */
-export function CopyField({ label, value, href }: CopyFieldProps) {
+export function CopyField({ label, value, href, copyValue }: CopyFieldProps) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export function CopyField({ label, value, href }: CopyFieldProps) {
 
   async function copy() {
     try {
-      await navigator.clipboard.writeText(value);
+      await navigator.clipboard.writeText(copyValue ?? value);
       setCopied(true);
     } catch {
       /* clipboard blocked — the link beside this still works */
@@ -32,12 +34,14 @@ export function CopyField({ label, value, href }: CopyFieldProps) {
   }
 
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-rule py-4">
+    <div className="flex items-center justify-between gap-4 border-b border-rule py-4 last:border-b-0">
       <div className="min-w-0">
         <span className="annot">{label}</span>
         <a
           href={href}
-          className="sweep mt-1.5 block w-fit max-w-full break-all text-lg font-medium tracking-tight transition-colors hover:text-accent sm:text-xl"
+          target={href.startsWith("http") ? "_blank" : undefined}
+          rel={href.startsWith("http") ? "noreferrer" : undefined}
+          className="sweep mt-1.5 block w-fit max-w-full break-all font-display text-lg font-semibold tracking-tight transition-colors hover:text-accent sm:text-xl"
         >
           {value}
         </a>
@@ -46,7 +50,7 @@ export function CopyField({ label, value, href }: CopyFieldProps) {
         type="button"
         onClick={copy}
         aria-label={`Copy ${label.toLowerCase()}`}
-        className="shrink-0 border border-rule px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint transition-colors hover:border-accent hover:text-accent"
+        className="pill h-8 shrink-0 px-3 uppercase tracking-[0.12em] text-ink-faint transition-colors hover:border-ink-faint hover:text-ink"
       >
         {copied ? "Copied" : "Copy"}
       </button>

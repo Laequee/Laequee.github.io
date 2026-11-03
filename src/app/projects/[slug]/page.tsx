@@ -3,9 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Reveal } from "@/components/blueprint/reveal";
-import { DimensionLine } from "@/components/blueprint/rules";
+import { CardSketch } from "@/components/home/card-sketch";
+import { DrawOnView } from "@/components/motion/draw-on-view";
+import { ScribbleUnderline } from "@/components/motion/scribble-underline";
 import { FlowDiagram } from "@/components/project/flow-diagram";
-import { getProject, getProjectNeighbours, projects } from "@/content/projects";
+import { toneBg } from "@/components/wordmark";
+import { getProject, getProjectNeighbours, projects, type Project } from "@/content/projects";
 
 /** Static export needs every slug enumerated at build time. */
 export function generateStaticParams() {
@@ -40,13 +43,6 @@ export async function generateMetadata(props: PageProps<"/projects/[slug]">): Pr
   };
 }
 
-/* Full class names so Tailwind can see them; a part-filled grid shows its rule colour. */
-const metricColumns: Record<number, string> = {
-  2: "sm:grid-cols-2",
-  3: "sm:grid-cols-3",
-  4: "sm:grid-cols-2 lg:grid-cols-4",
-};
-
 export default async function ProjectPage(props: PageProps<"/projects/[slug]">) {
   const { slug } = await props.params;
   const project = getProject(slug);
@@ -55,211 +51,126 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
   const { previous, next } = getProjectNeighbours(slug);
 
   return (
-    <article className="mx-auto max-w-6xl px-5 pb-20 pt-10 sm:px-8 sm:pt-14">
+    <article className="mx-auto max-w-6xl px-5 pb-20 pt-8 sm:px-8 sm:pt-10">
       <Link
         href="/#work"
-        className="sweep inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-soft transition-colors hover:text-accent"
+        className="pill h-8 px-3.5 uppercase tracking-[0.12em] text-ink-soft transition-colors hover:border-ink-faint hover:text-ink"
       >
-        <span aria-hidden="true">←</span> All projects
+        <span aria-hidden="true">←</span> All work
       </Link>
 
-      {/* Header */}
-      <header className="mt-8 border-b border-rule pb-10">
-        <span className="font-mono text-[11px] tracking-[0.14em] text-accent">
-          Fig.&nbsp;{project.index}
-        </span>
-        <h1 className="mt-3 max-w-3xl text-[2rem] font-bold leading-[1.1] tracking-tight text-accent sm:text-5xl">
+      {/* The card from the home page, opened up. */}
+      <header className={`relative mt-6 rounded-[1.75rem] p-6 text-on-tone sm:p-10 ${toneBg[project.tone]}`}>
+        {/*
+          The card's hover sketch, drawn large into the header's empty corner as
+          the page opens. xl only: below that it would run into the title.
+        */}
+        <DrawOnView className="absolute right-10 top-20 hidden xl:block" threshold={0.2}>
+          <CardSketch notes={project.notes} variant={Number(project.index) - 1} size="header" />
+        </DrawOnView>
+        <div className="flex flex-wrap items-center justify-between gap-3 font-mono text-[12px] font-semibold">
+          <span>Case study {project.index}</span>
+          <span className="opacity-75">{project.period}</span>
+        </div>
+        <h1 className="mt-10 max-w-3xl font-display xl:max-w-2xl text-[2.4rem] font-bold leading-[1] tracking-[-0.03em] sm:text-6xl">
           {project.title}
         </h1>
-        <p className="annot mt-3">{project.kind}</p>
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
-          {project.summary}
-        </p>
+        <p className="mt-5 max-w-2xl text-base leading-relaxed opacity-85 sm:text-lg">{project.summary}</p>
 
-        <dl className="mt-9 grid gap-6 border-t border-rule pt-6 sm:grid-cols-4">
-          <Meta label="Client" value={project.client} />
-          <Meta label="Employer" value={project.employer} />
-          <Meta label="Period" value={project.period} />
-          <Meta label="Role" value={project.role} />
-        </dl>
-      </header>
-
-      {/* At a glance. Pending metrics were removed, so a study can hold none. */}
-      {project.metrics.length > 0 && (
-      <Reveal>
-        <section className="py-10 sm:py-14">
-          <span className="annot">At a glance</span>
-          <dl className={`mt-5 grid gap-px border border-rule bg-rule ${metricColumns[project.metrics.length] ?? ""}`}>
+        {project.metrics.length > 0 && (
+          <dl className="mt-10 grid grid-cols-2 gap-6 border-t border-on-tone/20 pt-6 sm:grid-cols-4">
             {project.metrics.map((metric) => (
-              <div key={metric.label} className="bg-bg px-5 py-6">
-                {/*
-                  Most values are three or four characters. A range like
-                  "2008 → 2025" is eleven and overruns the cell at 3xl, so
-                  anything long drops a step rather than clipping.
-                */}
+              <div key={metric.label}>
                 <dd
-                  className={`font-semibold tabular-nums tracking-tight ${
-                    metric.value.length > 7 ? "text-2xl" : "text-3xl"
-                  } ${metric.pending ? "text-ink-faint/50" : ""}`}
+                  className={`font-display font-bold leading-none tracking-tight ${
+                    metric.value.length > 7 ? "text-2xl" : "text-[2rem]"
+                  } ${metric.pending ? "opacity-40" : ""}`}
                 >
                   {metric.value}
                 </dd>
-                <dt className="mt-2 text-[13px] leading-snug text-ink-soft">{metric.label}</dt>
-                {metric.pending && <p className="annot mt-2">To be confirmed</p>}
+                <dt className="mt-2 text-[13px] leading-snug opacity-75">{metric.label}</dt>
               </div>
             ))}
           </dl>
-        </section>
-      </Reveal>
-      )}
+        )}
+      </header>
 
-      <DimensionLine />
+      <div className="grid gap-5 py-5 lg:grid-cols-[1fr_20rem]">
+        <div className="space-y-5">
+          <Reveal className="panel p-6 sm:p-8">
+            <h2 className="font-display text-2xl font-bold tracking-tight">
+              <ScribbleUnderline tone={project.tone} variant={0}>The problem</ScribbleUnderline>
+            </h2>
+            <div className="mt-4 space-y-4">
+              {project.context.map((paragraph) => (
+                <p key={paragraph} className="text-[15px] leading-relaxed text-ink-soft">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </Reveal>
 
-      <div className="grid gap-12 py-12 lg:grid-cols-[1fr_20rem] lg:gap-16 lg:py-16">
-        <div className="max-w-2xl">
-          <Reveal>
-            <Prose heading="Context" paragraphs={project.context} />
+          <Reveal className="panel p-6 sm:p-8">
+            <h2 className="font-display text-2xl font-bold tracking-tight">
+              <ScribbleUnderline tone={project.tone} variant={1}>What I did</ScribbleUnderline>
+            </h2>
+            <ol className="mt-5 space-y-5">
+              {project.approach.map((item, i) => (
+                <li key={item.step} className="flex gap-4">
+                  <span className="grid size-7 shrink-0 place-items-center rounded-full border border-rule-strong font-mono text-[11px] text-ink-soft">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <h3 className="font-semibold tracking-tight">{item.step}</h3>
+                    <p className="mt-1 text-[15px] leading-relaxed text-ink-soft">{item.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </Reveal>
 
           <Reveal>
-            <section className="mt-12">
-              <h2 className="text-2xl font-semibold tracking-tight">Approach</h2>
-              <ol className="mt-6 border-t border-rule">
-                {project.approach.map((item, i) => (
-                  <li key={item.step} className="border-b border-rule py-6">
-                    <div className="flex gap-4 sm:gap-6">
-                      <span className="mt-0.5 font-mono text-[11px] tracking-[0.14em] text-accent">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div>
-                        <h3 className="text-[17px] font-semibold tracking-tight">
-                          {item.step}
-                        </h3>
-                        <p className="prose-face mt-2 text-[15px] leading-relaxed text-ink-soft">
-                          {item.detail}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </section>
+            <FlowDiagram diagram={project.diagram} />
           </Reveal>
 
-          {project.phases && (
-            <Reveal>
-              <section className="mt-12">
-                <h2 className="text-2xl font-semibold tracking-tight">Programme phases</h2>
-                <ol className="mt-6 grid gap-px border border-rule bg-rule sm:grid-cols-3">
-                  {project.phases.map((phase) => (
-                    <li key={phase.label} className="bg-bg px-5 py-6">
-                      <div className="flex items-baseline gap-2.5">
-                        <span className="font-mono text-[11px] tracking-[0.14em] text-accent">
-                          {phase.label}
-                        </span>
-                        <span className="annot">{phase.status}</span>
-                      </div>
-                      <p className="prose-face mt-3 text-[14px] leading-relaxed text-ink-soft">
-                        {phase.detail}
-                      </p>
-                    </li>
-                  ))}
-                </ol>
-              </section>
-            </Reveal>
-          )}
-
-          <Reveal>
-            <section className="mt-12">
-              <h2 className="text-2xl font-semibold tracking-tight">Architecture</h2>
-              <div className="mt-6">
-                <FlowDiagram diagram={project.diagram} />
-              </div>
-            </section>
-          </Reveal>
-
-          {/*
-            Sits between the architecture and the outcome deliberately: the reader
-            has the shape of the work by now, and the outcome lands harder after
-            the things that nearly stopped it.
-          */}
-          {project.challenges && (
-            <Reveal>
-              <section className="mt-12">
-                <h2 className="text-2xl font-semibold tracking-tight">
-                  Where it got difficult
-                </h2>
-                <ul className="mt-6 space-y-px bg-rule">
-                  {project.challenges.map((item) => (
-                    <li key={item.title} className="bg-bg pb-6 pt-6">
-                      <h3 className="flex gap-3 text-[17px] font-semibold tracking-tight">
-                        <span aria-hidden="true" className="mt-2.5 h-px w-4 shrink-0 bg-accent" />
-                        {item.title}
-                      </h3>
-                      <p className="prose-face mt-2 pl-7 text-[15px] leading-relaxed text-ink-soft">
-                        {item.detail}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            </Reveal>
-          )}
-
-          {project.validation && (
-            <Reveal>
-              <section className="mt-12">
-                <h2 className="text-2xl font-semibold tracking-tight">Validation</h2>
-                <div className="mt-5 border-l-2 border-accent-line pl-5">
-                  {project.validation.map((paragraph) => (
-                    <p
-                      key={paragraph}
-                      className="prose-face text-[15px] leading-relaxed text-ink-soft [&+p]:mt-4"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </section>
-            </Reveal>
-          )}
-
-          <Reveal>
-            <section className="mt-12">
-              <h2 className="text-2xl font-semibold tracking-tight">Outcome</h2>
-              <ul className="mt-5 space-y-3">
-                {project.outcome.map((line) => (
-                  <li key={line} className="flex gap-3 text-[15px] leading-relaxed text-ink-soft">
-                    <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 bg-accent" />
-                    <span>{line}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
+          <Reveal className="panel p-6 sm:p-8">
+            <h2 className="font-display text-2xl font-bold tracking-tight">
+              <ScribbleUnderline tone={project.tone} variant={2}>Result</ScribbleUnderline>
+            </h2>
+            <ul className="mt-5 space-y-3">
+              {project.outcome.map((line) => (
+                <li key={line} className="flex gap-3 text-[15px] leading-relaxed text-ink-soft">
+                  <span aria-hidden="true" className={`mt-[9px] size-2 shrink-0 rounded-full ${toneBg[project.tone]}`} />
+                  <span>{line}</span>
+                </li>
+              ))}
+            </ul>
           </Reveal>
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <div className="border border-rule bg-surface/60 px-5 py-6">
+        <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
+          <div className="panel p-6">
+            <dl className="space-y-4">
+              <Meta label="Role" value={project.role} />
+              <Meta label="Employer" value={project.employer} />
+              <Meta label="Client" value={project.client} />
+              <Meta label="Period" value={project.period} />
+            </dl>
+          </div>
+          <div className="panel p-6">
             <span className="annot">Stack</span>
-            <ul className="mt-4 flex flex-wrap gap-1.5">
+            <ul className="mt-4 flex flex-wrap gap-2">
               {project.stack.map((tool) => (
-                <li
-                  key={tool}
-                  className="console-chip bg-bg px-2 py-1"
-                >
+                <li key={tool} className="pill h-7 px-3 text-ink-soft">
                   {tool}
                 </li>
               ))}
             </ul>
           </div>
-          {/*
-            Outstanding content questions, visible only while running locally.
-            Stripped from the production build so they never reach the live site.
-          */}
+          {/* Outstanding content questions: dev server only, never in the export. */}
           {process.env.NODE_ENV === "development" && project.needs.length > 0 && (
-            <div className="mt-4 border border-accent/50 px-5 py-6">
-              <span className="annot text-accent">Still needed · dev only</span>
+            <div className="rounded-[1.25rem] border border-dashed border-tone-amber/60 p-6">
+              <span className="annot text-tone-amber">Still needed · dev only</span>
               <ul className="mt-3 space-y-2">
                 {project.needs.map((need) => (
                   <li key={need} className="text-[13px] leading-relaxed text-ink-soft">
@@ -272,18 +183,9 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
         </aside>
       </div>
 
-      {/* Prev / next */}
-      <nav className="grid gap-px border border-rule bg-rule sm:grid-cols-2">
-        {previous ? (
-          <NeighbourLink direction="Previous" project={previous} align="left" />
-        ) : (
-          <span className="bg-bg" />
-        )}
-        {next ? (
-          <NeighbourLink direction="Next" project={next} align="right" />
-        ) : (
-          <span className="bg-bg" />
-        )}
+      <nav className="grid gap-5 sm:grid-cols-2">
+        {previous ? <NeighbourLink direction="Previous" project={previous} align="left" /> : <span />}
+        {next ? <NeighbourLink direction="Next" project={next} align="right" /> : <span />}
       </nav>
     </article>
   );
@@ -293,24 +195,8 @@ function Meta({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <dt className="annot">{label}</dt>
-      <dd className="mt-1.5 text-[15px] text-ink">{value}</dd>
+      <dd className="mt-1 text-[15px]">{value}</dd>
     </div>
-  );
-}
-
-function Prose({ heading, paragraphs }: { heading: string; paragraphs: string[] }) {
-  return (
-    <section>
-      <h2 className="text-2xl font-semibold tracking-tight">{heading}</h2>
-      <div className="mt-5 space-y-4">
-        {/* Inter here — these run to several paragraphs and monospace tires the eye. */}
-        {paragraphs.map((paragraph) => (
-          <p key={paragraph} className="prose-face text-[15px] leading-relaxed text-ink-soft">
-            {paragraph}
-          </p>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -320,21 +206,23 @@ function NeighbourLink({
   align,
 }: {
   direction: string;
-  project: { slug: string; title: string; kind: string };
+  project: Project;
   align: "left" | "right";
 }) {
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className={`group bg-bg px-5 py-6 transition-colors hover:bg-surface sm:px-6 sm:py-7 ${
-        align === "right" ? "sm:text-right" : ""
+      className={`panel group flex items-center gap-4 p-6 transition-colors hover:border-rule-strong ${
+        align === "right" ? "sm:flex-row-reverse sm:text-right" : ""
       }`}
     >
-      <span className="annot">{direction}</span>
-      <p className="mt-2 text-lg font-semibold tracking-tight transition-colors group-hover:text-accent">
-        {project.title}
-      </p>
-      <p className="annot mt-1.5">{project.kind}</p>
+      <span aria-hidden="true" className={`size-10 shrink-0 rounded-full ${toneBg[project.tone]}`} />
+      <span>
+        <span className="annot">{direction}</span>
+        <span className="mt-1.5 block font-display text-lg font-bold tracking-tight transition-colors group-hover:text-accent">
+          {project.title}
+        </span>
+      </span>
     </Link>
   );
 }

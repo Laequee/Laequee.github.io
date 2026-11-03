@@ -8,8 +8,8 @@ import type { Project } from "@/content/projects";
  */
 export function FlowDiagram({ diagram }: { diagram: Project["diagram"] }) {
   return (
-    <figure className="border border-rule bg-surface/60">
-      <div className="neon-grid px-4 py-8 sm:px-8 sm:py-10">
+    <figure className="panel overflow-hidden">
+      <div className="grid-paper px-4 py-8 sm:px-8 sm:py-10">
         <div className="mx-auto flex max-w-3xl flex-col items-stretch">
           {diagram.layers.map((layer, layerIndex) => (
             <div key={layer.label}>
@@ -19,7 +19,7 @@ export function FlowDiagram({ diagram }: { diagram: Project["diagram"] }) {
                   {layer.nodes.map((node) => (
                     <li
                       key={node}
-                      className="flex-1 whitespace-nowrap border border-rule-strong bg-bg px-3 py-2.5 text-center font-mono text-[11px] tracking-[0.06em] text-ink-soft"
+                      className="flex-1 whitespace-nowrap rounded-full border border-rule-strong bg-bg px-3 py-2.5 text-center font-mono text-[11px] tracking-[0.06em] text-ink-soft"
                     >
                       {node}
                     </li>

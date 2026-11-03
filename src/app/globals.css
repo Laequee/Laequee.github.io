@@ -1,50 +1,38 @@
 @import "tailwindcss";
 
 /*
-  NEON TERMINAL
-  Monospace-forward, near-black ground, a single cyan accent doing all the work.
-  Dark only — a light variant of a neon-on-black design fights itself, so there
-  is no theme toggle. Tokens still live here; change a value and it propagates.
+  WIRED WORDMARK (redesign, 2026-11)
+  Near-black graph paper, an off-white ink, and six saturated tones that belong
+  to the wordmark and the case-study cards. Everything else stays neutral so
+  the colour always means "this is a thing you can open".
+  Dark only: the tones are tuned against the dark ground, not for a light one.
 */
 
 :root {
-  --bg: #05070f;
-  --surface: #0b0f1c;
-  --surface-2: #121829;
-  --ink: #ffffff;
-  --ink-soft: #a8b3c7;
-  --ink-faint: #6b7891;
-  --rule: #1a2236;
-  --rule-strong: #2c3852;
+  --bg: #111214;
+  --surface: #17181b;
+  --surface-2: #1e1f23;
+  --ink: #f1f1f4;
+  --ink-soft: #b3b5be;
+  --ink-faint: #80838e;
+  --rule: #26282d;
+  --rule-strong: #3a3c43;
 
-  --accent: #00e5ff;
-  --accent-ink: #04121a;
-  --accent-wash: rgba(0, 229, 255, 0.09);
-  --accent-line: rgba(0, 229, 255, 0.35);
-  --accent-glow: rgba(0, 229, 255, 0.28);
+  /* The six wordmark tones, one per letter of "laeque". Cards reuse them. */
+  --tone-violet: #9b8cff;
+  --tone-azure: #6c9bff;
+  --tone-teal: #3fcfb8;
+  --tone-amber: #ffb547;
+  --tone-coral: #ff7a5c;
+  --tone-rose: #f584b6;
+  /* Text set on a tone. Dark, so every tone passes contrast with it. */
+  --on-tone: #141416;
 
-  /*
-    Counterpoint colour, used for the name alone. Opposite temperature to the
-    cyan, so the two never read as competing for the same job. Swap this one
-    value to retint the name — nothing else references it.
-      amber  #ffb020   ·  violet  #a78bfa   ·  lime  #b8f24a
-  */
-  --accent-warm: #ff5fa2;
+  --accent: var(--tone-azure);
+  --live: #3ddc84;
 
-  /*
-    PowerShell green. Windows Terminal's Campbell brightGreen — the actual
-    value a console paints Write-Host -ForegroundColor Green. Measures 8.29:1
-    on the ticker surface. The legacy #00FF00 was too harsh next to the cyan.
-  */
-  --console: #16c60c;
-
-  /* 0.032 was invisible on most displays; the squares need to actually read. */
-  --grid: rgba(255, 255, 255, 0.055);
-  --grid-cell: 88px;
-
-  /* Parked offscreen until PointerGlow reports a real position. */
-  --mx: -9999px;
-  --my: -9999px;
+  --grid: rgba(255, 255, 255, 0.045);
+  --grid-cell: 40px;
 }
 
 @theme inline {
@@ -57,158 +45,75 @@
   --color-rule: var(--rule);
   --color-rule-strong: var(--rule-strong);
   --color-accent: var(--accent);
-  --color-accent-ink: var(--accent-ink);
-  --color-accent-wash: var(--accent-wash);
-  --color-accent-line: var(--accent-line);
-  --color-accent-warm: var(--accent-warm);
-  --color-console: var(--console);
+  --color-live: var(--live);
+  --color-on-tone: var(--on-tone);
+  --color-tone-violet: var(--tone-violet);
+  --color-tone-azure: var(--tone-azure);
+  --color-tone-teal: var(--tone-teal);
+  --color-tone-amber: var(--tone-amber);
+  --color-tone-coral: var(--tone-coral);
+  --color-tone-rose: var(--tone-rose);
 
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
-  /*
-    Cascadia Code — Microsoft's own terminal typeface, what PowerShell and
-    Windows Terminal actually ship with. Consolas and Lucida Console follow as
-    local fallbacks, since most of the audience is on Windows and already has
-    them installed.
-  */
-  --font-console: var(--font-cascadia), "Cascadia Mono", Consolas, "Lucida Console",
-    ui-monospace, monospace;
-  /* Reserved for multi-paragraph prose, where full monospace gets tiring. */
-  --font-prose: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-
-  --animate-ticker: ticker 52s linear infinite;
-  --animate-ring: ring-spin 22s linear infinite;
+  --font-hand: var(--font-caveat), "Segoe Print", cursive;
 }
 
-@keyframes ticker {
+@keyframes letter-rise {
   from {
-    transform: translateX(0);
+    opacity: 0;
+    transform: translateY(0.35em) scale(0.92);
   }
   to {
-    transform: translateX(-50%);
+    opacity: 1;
+    transform: none;
   }
 }
 
-@keyframes ring-spin {
+@keyframes wire-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-in {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
   }
   to {
-    transform: rotate(360deg);
-  }
-}
-
-/*
-  Soft-body wobble, modelled on Jelly UI's own entrance sequence
-  (scale 0.92,0.96 → 1.014,0.997 → 0.998,1.002 → 1, 420ms,
-  cubic-bezier(.16,.82,.28,1)).
-
-  The point is that X and Y move in OPPOSITION — wide when flat, narrow when
-  tall. That volume-preserving trade is what reads as a bubble; scaling both
-  axes together just reads as a zoom, which is why the transition-based
-  version felt wrong however hard it sprang. A transition interpolates one
-  value and cannot oscillate, so this has to be keyframes.
-
-  Amplitudes here are larger than theirs — their sequence is an entrance on a
-  whole dialog, this is a small pill that needs the motion to register.
-*/
-@keyframes jelly-bubble {
-  0% {
-    transform: translateY(0) scale(1, 1);
-  }
-  28% {
-    transform: translateY(-6px) scale(1.11, 0.94);
-  }
-  52% {
-    transform: translateY(-2px) scale(0.98, 1.08);
-  }
-  72% {
-    transform: translateY(-4px) scale(1.07, 1.01);
-  }
-  88% {
-    transform: translateY(-3px) scale(1.02, 1.06);
-  }
-  100% {
-    transform: translateY(-3px) scale(1.05, 1.05);
-  }
-}
-
-/* Shorter, tighter — fires when the pointer actually reaches the pill. */
-@keyframes jelly-bubble-near {
-  0% {
-    transform: translateY(-3px) scale(1.05, 1.05);
-  }
-  35% {
-    transform: translateY(-7px) scale(1.13, 0.96);
-  }
-  65% {
-    transform: translateY(-3px) scale(1.02, 1.11);
-  }
-  85% {
-    transform: translateY(-5px) scale(1.09, 1.05);
-  }
-  100% {
-    transform: translateY(-4px) scale(1.07, 1.07);
+    opacity: 1;
   }
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5.5rem;
+    scroll-padding-top: 5rem;
     color-scheme: dark;
     background-color: var(--bg);
   }
 
+  /* No background on body: html carries it, so the fixed grid layer shows. */
   body {
-    /*
-      Deliberately no background-color here — html carries it.
-
-      body is position: relative, so an opaque background on it paints over
-      every negative z-index child. The grid layers sit at -10 and were being
-      hidden completely; the background has looked flat black since the neon
-      redesign for exactly this reason. html's background propagates to the
-      canvas, which paints below the grid rather than above it.
-    */
     color: var(--ink);
-    font-family: var(--font-jetbrains), ui-monospace, monospace;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
-    font-variant-ligatures: none;
   }
 
-  /* Metrics and dates align in columns; proportional digits wobble. */
-  .font-mono,
-  th,
-  td {
+  .font-mono {
     font-variant-numeric: tabular-nums;
   }
 
   ::selection {
     background-color: var(--accent);
-    color: var(--accent-ink);
+    color: var(--on-tone);
   }
 
   :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
-    border-radius: 2px;
-  }
-
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: var(--bg);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--rule-strong);
-    border-radius: 99px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--accent);
+    border-radius: 6px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -220,72 +125,35 @@
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
   }
 }
 
-/* Long-form reading only — case study context, approach, outcome. */
+/* Long-form reading on the case-study pages. */
 @utility prose-face {
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans);
 }
 
-/* Small uppercase mono annotation, used for every label and caption. */
+/* Small uppercase mono label, used for every caption and meta line. */
 @utility annot {
+  font-family: var(--font-mono);
   font-size: 0.6875rem;
-  line-height: 1.25;
-  letter-spacing: 0.18em;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-faint);
 }
 
-/*
-  Graph paper. Fixed, so the page scrolls across it.
-  88px rather than 64 — at the smaller size the lattice read as texture
-  instead of squares, which was the whole point of having it.
-*/
-@utility neon-grid {
+@utility grid-paper {
   background-image:
     linear-gradient(var(--grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid) 1px, transparent 1px);
   background-size: var(--grid-cell) var(--grid-cell);
 }
 
-/*
-  The same lattice in the accent, revealed only around the pointer.
-  --mx/--my come from PointerGlow; they start far offscreen so nothing shows
-  until the pointer has actually moved.
-
-  Alignment matters: this must share --grid-cell and background-position with
-  the base grid, or the two lattices sit a fraction out and the reveal looks
-  like a printing error rather than the same grid lighting up.
-*/
-@utility neon-grid-lit {
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--accent) 26%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--accent) 26%, transparent) 1px, transparent 1px);
-  background-size: var(--grid-cell) var(--grid-cell);
-  mask-image: radial-gradient(
-    circle 260px at var(--mx) var(--my),
-    #000 0%,
-    rgba(0, 0, 0, 0.45) 45%,
-    transparent 72%
-  );
-  -webkit-mask-image: radial-gradient(
-    circle 260px at var(--mx) var(--my),
-    #000 0%,
-    rgba(0, 0, 0, 0.45) 45%,
-    transparent 72%
-  );
-
-  /* Touch devices have no hover to reveal it, so it would just never appear. */
-  @media (pointer: coarse) {
-    display: none;
-  }
-}
-
-/* Underline sweeping in from the left — the standard link hover. */
 @utility sweep {
   background-image: linear-gradient(currentColor, currentColor);
   background-repeat: no-repeat;
@@ -299,171 +167,133 @@
   }
 }
 
-/*
-  Stack chip, set as console output to match the ticker.
-  Natural case and tight tracking on purpose — uppercase with wide letter
-  spacing is a design convention, not something a shell ever prints, and it
-  fought the effect the typeface and colour were building.
-*/
-@utility console-chip {
-  font-family: var(--font-console);
+/* Outlined pill: nav labels, tool tags, small buttons. */
+@utility pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  font-family: var(--font-mono);
   font-size: 0.6875rem;
-  line-height: 1.45;
-  letter-spacing: 0.03em;
-  color: var(--console);
-  border: 1px solid color-mix(in srgb, var(--console) 22%, transparent);
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
 }
 
-/*
-  Soft-body buttons.
-
-  The look Jelly UI sells, built from our own tokens rather than loading their
-  hosted script: a faint gradient body, an inset top highlight so the surface
-  reads as lit from above, a spring curve that overshoots on the way in, and a
-  squash on press. Reduced-motion users get the colour change without the
-  physics, via the global rule above.
-*/
-/*
-  A 2px lift on a spring curve is imperceptible — the first pass technically
-  animated but read as a plain colour swap. Soft-body motion needs the shape
-  itself to change: scale up on approach, squash wide and flat on press, and a
-  curve that overshoots far enough to visibly settle.
-*/
-@theme inline {
-  --jelly-spring: cubic-bezier(0.22, 1.7, 0.36, 1);
-}
-
-@utility neon-outline {
-  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
-  color: var(--accent);
-  background-image: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--accent) 13%, transparent),
-    color-mix(in srgb, var(--accent) 4%, transparent)
-  );
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--accent) 30%, transparent),
-    0 4px 14px -8px var(--accent-glow);
-  transform-origin: center;
-  will-change: transform;
+/* Solid button on the light ink. */
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 600;
   transition:
-    transform 0.45s var(--jelly-spring),
-    background-color 0.22s,
-    color 0.22s,
-    box-shadow 0.3s,
-    border-color 0.22s;
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+    background-color 0.2s;
 
-  &:hover,
-  &:focus-visible {
-    background-color: var(--accent);
-    background-image: none;
-    color: var(--accent-ink);
-    border-color: var(--accent);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.35),
-      0 12px 28px -10px var(--accent-glow),
-      0 0 24px var(--accent-glow);
-    animation: jelly-bubble 0.52s cubic-bezier(0.16, 0.82, 0.28, 1) forwards;
+  &:hover {
+    transform: translateY(-2px);
+    background: #ffffff;
   }
 
   &:active {
-    /* The press must beat the wobble, so it cancels the animation outright. */
-    animation: none;
-    transform: translateY(2px) scaleX(1.13) scaleY(0.84);
-    transition-duration: 0.07s;
-    transition-timing-function: ease-out;
+    transform: translateY(1px) scale(0.98);
+  }
+}
+
+@utility btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-soft);
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  &:hover {
+    color: var(--ink);
+    border-color: var(--ink-faint);
+    transform: translateY(-2px);
+  }
+}
+
+/* Rounded panel on the raised surface. */
+@utility panel {
+  border: 1px solid var(--rule);
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+}
+
+/*
+  Card fan. Below lg the cards are a plain grid. From lg up they start stacked
+  and fanned like a hand of cards, then deal out into the grid the first time
+  the row scrolls into view. --fan-x / --fan-r are set per card by CardFan.
+*/
+@utility fan-card {
+  transition:
+    transform 0.9s cubic-bezier(0.2, 0.75, 0.15, 1),
+    box-shadow 0.3s;
+  transition-delay: var(--fan-delay, 0ms);
+
+  @media (min-width: 1024px) {
+    [data-spread="false"] & {
+      transform: translateX(var(--fan-x)) translateY(24px) rotate(var(--fan-r));
+    }
   }
 }
 
 /*
-  The same body, but driven by an ancestor .group rather than its own hover.
-  The project rows are already links, so this has to be a span — nesting a real
-  button inside an anchor is invalid and breaks keyboard navigation.
+  Hand-drawn sketches: a stroke that draws itself and notes that settle in.
+  Triggered by hover or keyboard focus on a project card, or by DrawOnView
+  setting data-drawn on an ancestor when it scrolls into sight (case-study
+  headers, heading underlines). Touch screens have no hover, so there they
+  are simply shown, already drawn.
 */
-@utility jelly-cta {
-  /* Neutral until JellyPill starts publishing pointer position. */
-  --jx: 0;
-  --jy: 0;
-  --jd: 0;
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-  color: var(--accent);
-  background-image: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--accent) 13%, transparent),
-    color-mix(in srgb, var(--accent) 4%, transparent)
-  );
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--accent) 30%, transparent),
-    0 4px 14px -8px var(--accent-glow);
-  transform-origin: center;
-  will-change: transform;
+@utility sketch-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  /* Hidden at rest as well: the round cap leaves a dot even on an empty dash. */
+  opacity: 0;
   transition:
-    transform 0.45s var(--jelly-spring),
-    background-color 0.22s,
-    color 0.22s,
-    box-shadow 0.3s,
-    border-color 0.22s;
+    stroke-dashoffset 1s cubic-bezier(0.55, 0, 0.25, 1),
+    opacity 0.15s;
 
-  /* Anywhere on the row wakes the button, and it bubbles once on arrival. */
   .group:hover &,
-  .group:focus-visible & {
-    background-color: var(--accent);
-    background-image: none;
-    color: var(--accent-ink);
-    border-color: var(--accent);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.35),
-      0 12px 28px -10px var(--accent-glow),
-      0 0 24px var(--accent-glow);
-    animation: jelly-bubble 0.52s cubic-bezier(0.16, 0.82, 0.28, 1) forwards;
+  .group:focus-visible &,
+  [data-drawn="true"] & {
+    stroke-dashoffset: 0;
+    opacity: 1;
   }
 
-  /*
-    With the pointer actually on the pill, the shape stops being a fixed
-    animation and starts following the cursor: the near edge bulges, the far
-    edge flattens, and the body leans. --jx/--jy/--jd come from JellyPill.
-
-    The keyframe wobble has to be cancelled here — an animation with
-    fill: forwards outranks the transform property, so the two cannot coexist.
-  */
-  .group:hover &:hover {
-    animation: none;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.45),
-      0 16px 34px -12px var(--accent-glow),
-      0 0 30px var(--accent-glow);
-    transform: translate(calc(var(--jx) * 7px), calc(var(--jy) * 5px - 3px))
-      rotate(calc(var(--jx) * var(--jy) * -2.5deg))
-      scale(calc(1.05 + var(--jd) * 0.07), calc(1.05 - var(--jd) * 0.05));
-    /*
-      Asymmetric corners are what make it read as soft rather than scaled.
-      In px, not %: on a 237x39 pill a percentage radius resolves against the
-      width, so 50% turns the whole button into an ellipse and it stops looking
-      like a button at all. Around half the height keeps the pill identity and
-      lets the corners bulge within it.
-    */
-    border-radius: calc(20px - var(--jx) * 9px) calc(20px + var(--jx) * 9px)
-      calc(20px + var(--jx) * 9px) calc(20px - var(--jx) * 9px) /
-      calc(20px - var(--jy) * 7px) calc(20px - var(--jy) * 7px)
-      calc(20px + var(--jy) * 7px) calc(20px + var(--jy) * 7px);
-    /* Snappy while tracking; the spring is for the release. */
-    transition:
-      transform 0.12s ease-out,
-      border-radius 0.12s ease-out,
-      background-color 0.22s,
-      color 0.22s,
-      box-shadow 0.3s,
-      border-color 0.22s;
-  }
-
-  .group:active & {
-    animation: none;
-    transform: translateY(2px) scaleX(1.13) scaleY(0.84);
-    transition-duration: 0.07s;
-    transition-timing-function: ease-out;
+  @media (hover: none) {
+    stroke-dashoffset: 0;
+    opacity: 1;
   }
 }
 
-@utility glow {
-  box-shadow: 0 0 40px var(--accent-glow);
+@utility sketch-note {
+  opacity: 0;
+  translate: 0 6px;
+  transition:
+    opacity 0.45s ease-out,
+    translate 0.45s ease-out;
+  transition-delay: var(--note-delay, 0ms);
+
+  .group:hover &,
+  .group:focus-visible &,
+  [data-drawn="true"] & {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @media (hover: none) {
+    opacity: 1;
+    translate: 0 0;
+  }
 }

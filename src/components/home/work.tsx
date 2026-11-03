@@ -1,122 +1,88 @@
-import Link from "next/link";
-
-import { Reveal } from "@/components/blueprint/reveal";
 import { Section } from "@/components/blueprint/rules";
-import { JellyPill } from "@/components/jelly-pill";
+import { CardFan } from "@/components/home/card-fan";
+import { CardSketch } from "@/components/home/card-sketch";
+import { TiltCard } from "@/components/motion/tilt-card";
+import { toneBg } from "@/components/wordmark";
 import { projects } from "@/content/projects";
 
-/**
- * The drawing index: every case study as a row, most significant first.
- * Rows rather than tiles because the metrics need a column to align in.
- */
+const GAP_PX = 20;
+
 export function Work() {
   return (
     <Section
       index="01"
       id="work"
-      title="Selected Work"
+      title="Selected work"
       lede="Four projects from a 5,000-user Microsoft 365 estate: endpoint management, migration, directory and endpoint security."
     >
-      <ul className="border-t border-rule">
+      <CardFan className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {projects.map((project, i) => {
-          const confirmed = project.metrics.filter((metric) => !metric.pending);
+          /* Offset from the row's centre, in card positions: -1.5 … 1.5 for four cards. */
+          const offset = i - (projects.length - 1) / 2;
+          const metrics = project.metrics.filter((metric) => !metric.pending).slice(0, 2);
 
           return (
-          <Reveal as="li" key={project.slug} delay={Math.min(i, 5) * 50}>
-            <Link
-              href={`/projects/${project.slug}`}
-              className="group block border-b border-rule py-7 transition-colors hover:bg-surface/60"
+            <li
+              key={project.slug}
+              className="fan-card relative"
+              style={
+                {
+                  zIndex: projects.length - Math.abs(Math.round(offset)),
+                  "--fan-x": `calc(${-offset} * (100% + ${GAP_PX}px) + ${offset * 46}px)`,
+                  "--fan-r": `${offset * 5}deg`,
+                  "--fan-delay": `${i * 70}ms`,
+                } as React.CSSProperties
+              }
             >
-              <div className="grid gap-5 lg:grid-cols-[7rem_1fr_auto] lg:items-start lg:gap-8">
-                <div className="flex items-baseline gap-3 lg:block">
-                  <span className="font-mono text-[11px] tracking-[0.14em] text-accent">
-                    {project.index}
-                  </span>
-                  <span className="annot lg:mt-2 lg:block">{project.period}</span>
+              <TiltCard
+                href={`/projects/${project.slug}`}
+                className={`group flex h-full min-h-[30rem] flex-col rounded-[1.4rem] p-5 text-on-tone shadow-[0_24px_60px_-28px_rgba(0,0,0,0.8)] sm:p-6 ${toneBg[project.tone]}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <span className="font-mono text-[12px] font-semibold">{project.index}</span>
+                  <span className="font-mono text-[11px] font-semibold opacity-75">{project.period}</span>
                 </div>
 
-                <div className="max-w-2xl">
-                  {/*
-                    Accent by default rather than on hover — the titles are the
-                    thing worth scanning. Hover inverts to ink so the row still
-                    responds; leaving it accent-on-accent would kill the feedback.
-                  */}
-                  <h3 className="text-xl font-bold tracking-tight text-accent transition-colors group-hover:text-ink sm:text-2xl">
-                    {project.title}
-                  </h3>
-                  <p className="annot mt-1.5">{project.kind}</p>
-                  <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
-                    {project.summary}
-                  </p>
-                  <ul className="mt-4 flex flex-wrap gap-1.5">
-                    {project.stack.slice(0, 5).map((tool) => (
-                      <li
-                        key={tool}
-                        className="console-chip px-2 py-0.5"
-                      >
-                        {tool}
-                      </li>
+                <div className="mt-3">
+                  <CardSketch notes={project.notes} variant={i} />
+                </div>
+
+                <h3 className="mt-3 font-display text-[1.55rem] font-bold leading-[1.05] tracking-[-0.02em]">
+                  {project.title}
+                </h3>
+                <p className="mt-3 text-[14px] leading-snug opacity-85">{project.summary}</p>
+
+                {metrics.length > 0 && (
+                  <dl className="mt-auto grid grid-cols-2 gap-3 pt-6">
+                    {metrics.map((metric) => (
+                      <div key={metric.label}>
+                        <dd
+                          className={`font-display font-bold leading-none tracking-tight ${
+                            metric.value.length > 6 ? "text-xl" : "text-[1.75rem]"
+                          }`}
+                        >
+                          {metric.value}
+                        </dd>
+                        <dt className="mt-1.5 text-[12px] leading-tight opacity-75">{metric.label}</dt>
+                      </div>
                     ))}
-                  </ul>
-                </div>
+                  </dl>
+                )}
 
-                {/* w-64, not w-56 — the CTA label needs ~226px and was wrapping. */}
-                <div className="lg:w-64">
-                  {/*
-                    Unconfirmed metrics are never shown on the index — a dash here reads
-                    as a broken row rather than an honest gap. Projects with nothing
-                    confirmed yet fall back to role and client so the column still
-                    carries weight instead of sitting empty.
-                  */}
-                  {confirmed.length > 0 ? (
-                    <dl className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-1 lg:gap-y-3.5">
-                      {confirmed.slice(0, 2).map((metric) => (
-                        <div key={metric.label} className="lg:flex lg:items-baseline lg:gap-3">
-                          {/*
-                            min-w rather than a fixed w: short values still line
-                            the labels up in a column, but a range like
-                            "2008 → 2025" is free to run past 5rem instead of
-                            overlapping the label beside it.
-                          */}
-                          <dd
-                            className={`font-semibold tabular-nums lg:min-w-20 lg:shrink-0 ${
-                              metric.value.length > 7 ? "text-[15px]" : "text-lg"
-                            }`}
-                          >
-                            {metric.value}
-                          </dd>
-                          <dt className="annot mt-0.5 lg:mt-0">{metric.label}</dt>
-                        </div>
-                      ))}
-                    </dl>
-                  ) : (
-                    <dl className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-1 lg:gap-y-3.5">
-                      <div>
-                        <dt className="annot">Role</dt>
-                        <dd className="mt-1 text-[14px] text-ink-soft">{project.role}</dd>
-                      </div>
-                      <div>
-                        <dt className="annot">Scope</dt>
-                        <dd className="mt-1 text-[14px] text-ink-soft">{project.kind}</dd>
-                      </div>
-                    </dl>
-                  )}
-                  <JellyPill className="jelly-cta mt-5 inline-flex items-center gap-2.5 whitespace-nowrap rounded-full px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em]">
-                    Read the case study
-                    <span
-                      aria-hidden="true"
-                      className="transition-transform duration-300 group-hover:translate-x-1"
-                    >
-                      →
-                    </span>
-                  </JellyPill>
+                <div className="mt-5 flex items-center justify-between border-t border-on-tone/20 pt-4">
+                  <span className="text-[13px] font-semibold">Read the case study</span>
+                  <span
+                    aria-hidden="true"
+                    className="grid size-8 place-items-center rounded-full bg-on-tone text-[15px] text-ink transition-transform duration-300 group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
                 </div>
-              </div>
-            </Link>
-          </Reveal>
+              </TiltCard>
+            </li>
           );
         })}
-      </ul>
+      </CardFan>
     </Section>
   );
 }

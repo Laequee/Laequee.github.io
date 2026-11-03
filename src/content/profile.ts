@@ -75,6 +75,14 @@ export const profile = {
   ],
   location: "Abu Dhabi, UAE",
 
+  /*
+   * The one line under the hero wordmark. "Look after" rather than "run" or
+   * "own": the CV says accountable for administration, and the estate is the
+   * client's, not mine.
+   */
+  tagline:
+    "Digital Workplace Specialist in Abu Dhabi. I look after Microsoft 365, Intune and Entra ID for an estate of 5,000+ identities.",
+
   intro:
     "I run and consolidate the identity, endpoint, and collaboration layers that large organisations depend on — Microsoft 365, Intune, Conditional Access and hybrid identity, and the tenant-scale migrations that get an estate onto one governed platform.",
 
@@ -105,16 +113,19 @@ export const profile = {
     githubLabel: "github.com/laequee",
   },
 
-  /**
-   * TODO(assets): drop the CV into /public and flip `hasCv`.
-   * Until then the CV links stay hidden rather than shipping links that 404.
+  /*
+   * The CV lives in Google Drive, not in this repo, so it can be updated
+   * without a redeploy. Every "CV" button opens this link in a new tab, and all
+   * of them stay hidden while it is null. Share it as "Anyone with the link:
+   * Viewer", or recruiters hit a Google sign-in wall.
    */
+  /*
+   * Empty until the trimmed CV is uploaded. The planned home is the Drive
+   * folder 1KEA3KE2qvJpusBWzZ-rXXDAU216iGi3Y; paste its share link here then.
+   */
+  cvUrl: null as string | null,
+
   photo: "/laeque.png",
-  cv: "/mohammed-laeque-cv.pdf",
-  assets: {
-    hasPhoto: true,
-    hasCv: false,
-  },
 
   avatars,
 

@@ -18,8 +18,12 @@ export type Metric = {
   pending?: boolean;
 };
 
+/** One of the wordmark tones in globals.css; colours the card and the page. */
+export type Tone = "violet" | "azure" | "teal" | "amber" | "coral" | "rose";
+
 export type Project = {
   slug: string;
+  tone: Tone;
   index: string;
   title: string;
   kind: string;
@@ -35,9 +39,6 @@ export type Project = {
   context: string[];
   /** Three or four steps, one sentence each. */
   approach: { step: string; detail: string }[];
-  phases?: { label: string; status: string; detail: string }[];
-  challenges?: { title: string; detail: string }[];
-  validation?: string[];
   outcome: string[];
   stack: string[];
   diagram: {
@@ -45,6 +46,12 @@ export type Project = {
     layers: { label: string; nodes: string[] }[];
   };
   keywords?: string[];
+  /*
+   * Three margin notes, handwritten onto the home-page card on hover. Each is
+   * a fact already stated in this case study, shortened: never a new claim.
+   * Keep each under ~24 characters or it collides with the doodle.
+   */
+  notes: [string, string, string];
   /** Outstanding questions, shown only in the dev build. */
   needs: string[];
 };
@@ -52,6 +59,8 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "intune-endpoint-platform",
+    notes: ["zero-touch Autopilot", "BitLocker + LAPS", "posture → Conditional Access"],
+    tone: "azure",
     index: "01",
     title: "Intune Endpoint Platform",
     kind: "Endpoint management · Zero Trust",
@@ -130,6 +139,8 @@ export const projects: Project[] = [
 
   {
     slug: "crowdstrike-tenant-migration",
+    notes: ["uninstall + install = 1 run", "7 domains", "tracked host by host"],
+    tone: "coral",
     index: "02",
     title: "CrowdStrike Tenant Migration",
     kind: "Endpoint security · Migration",
@@ -203,6 +214,8 @@ export const projects: Project[] = [
 
   {
     slug: "active-directory-consolidation",
+    notes: ["FRS → DFSR", "FFL 2008 → 2025", "no duplicate cloud accounts"],
+    tone: "violet",
     index: "03",
     title: "Active Directory Modernisation",
     kind: "Directory services · Hybrid identity",
@@ -277,6 +290,8 @@ export const projects: Project[] = [
 
   {
     slug: "sharepoint-file-server-migration",
+    notes: ["archive, don't migrate", "groups, not per-user grants", "no more VPN"],
+    tone: "teal",
     index: "04",
     title: "File Servers to SharePoint",
     kind: "Collaboration · Migration · Governance",

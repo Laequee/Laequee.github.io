@@ -1,28 +1,38 @@
 import type { Metadata } from "next";
-import { Cascadia_Code, Inter, JetBrains_Mono } from "next/font/google";
+import { Caveat, Inter, JetBrains_Mono, Outfit } from "next/font/google";
 
-import { PointerGlow } from "@/components/pointer-glow";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
-const jetbrains = JetBrains_Mono({
-  variable: "--font-jetbrains",
+/*
+ * Display face: the wordmark and headings. Outfit rather than Sora: Sora's
+ * heavy l carries a flag and the wordmark read as "1aeque".
+ */
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
   display: "swap",
 });
 
-/* Prose only — long case-study paragraphs, where full monospace gets tiring. */
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
 
-/* The ticker only — Microsoft's terminal typeface, for the console line. */
-const cascadia = Cascadia_Code({
-  variable: "--font-cascadia",
+/* Handwriting, for the margin notes that appear on the project cards. */
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["600"],
+  display: "swap",
+});
+
+/* Labels, tags and numbers only. */
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
   display: "swap",
 });
@@ -89,7 +99,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  themeColor: "#05070f",
+  themeColor: "#111214",
 };
 
 export default function RootLayout({
@@ -98,26 +108,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jetbrains.variable} ${inter.variable} ${cascadia.variable} h-full`}
+      data-scroll-behavior="smooth"
+      className={`${outfit.variable} ${caveat.variable} ${inter.variable} ${jetbrains.variable} h-full`}
     >
       <body className="relative flex min-h-full flex-col antialiased">
-        {/*
-          Two lattices, same cell size and origin so they line up exactly.
-          The base sits behind the hero and fades outward; the lit layer is
-          invisible until the pointer moves across it.
-        */}
-        <div
-          aria-hidden="true"
-          className="neon-grid pointer-events-none fixed inset-0 -z-10"
-          style={{
-            maskImage:
-              "radial-gradient(ellipse 78% 62% at 50% 20%, #000 22%, transparent 78%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 78% 62% at 50% 20%, #000 22%, transparent 78%)",
-          }}
-        />
-        <div aria-hidden="true" className="neon-grid-lit pointer-events-none fixed inset-0 -z-10" />
-        <PointerGlow />
+        <div aria-hidden="true" className="grid-paper pointer-events-none fixed inset-0 -z-10" />
         <SiteNav />
         <main className="flex-1">{children}</main>
         <SiteFooter />

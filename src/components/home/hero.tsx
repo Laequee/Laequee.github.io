@@ -1,227 +1,268 @@
-import { Reveal } from "@/components/blueprint/reveal";
-import { headlineLines, profile } from "@/content/profile";
-import { AvatarRing } from "./avatar-ring";
+"use client";
 
-const socials = [
-  { label: "LinkedIn", href: profile.contact.linkedin, icon: LinkedInIcon },
-  { label: "GitHub", href: profile.contact.github, icon: GitHubIcon },
-  { label: "Email", href: `mailto:${profile.contact.email}`, icon: MailIcon },
+import Link from "next/link";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+
+import { RippleGrid } from "@/components/motion/ripple-grid";
+import { toneText, wordmark } from "@/components/wordmark";
+import { profile } from "@/content/profile";
+
+/*
+ * Each section label is wired to one letter, like a patch lead into a port.
+ * `fx` is where on the letter's width the lead lands and `fy` is its height
+ * above the baseline in em. Both are tuned to Outfit's glyphs: the stem of the
+ * l, the crossbar of each e, the right stem of the q. Change the font and
+ * these need re-tuning, or the dots land in the letters' counters.
+ */
+const wires = [
+  { label: "work", href: "/#work", letter: 0, fx: 0.22, fy: 0.42, dx: -10, row: 1 },
+  { label: "experience", href: "/#experience", letter: 2, fx: 0.5, fy: 0.27, dx: -60, row: 0 },
+  { label: "skills", href: "/#stack", letter: 3, fx: 0.8, fy: 0.3, dx: 30, row: 1 },
+  { label: "contact", href: "/#contact", letter: 5, fx: 0.5, fy: 0.27, dx: 0, row: 0 },
 ];
 
+const ROW_TOP = [8, 64];
+const PILL_H = 28;
+const RADIUS = 10;
+
+type Geometry = { pills: { x: number; y: number }[]; paths: string[]; dots: { x: number; y: number }[] };
+
+/* Up, across, down, with rounded elbows. Straight if the lead barely moves sideways. */
+function leadPath(px: number, py: number, ey: number, ax: number, ay: number) {
+  const dx = ax - px;
+  if (Math.abs(dx) < RADIUS * 2) return `M${ax},${py} L${ax},${ay}`;
+  const dir = Math.sign(dx);
+  return [
+    `M${px},${py}`,
+    `L${px},${ey - RADIUS}`,
+    `Q${px},${ey} ${px + RADIUS * dir},${ey}`,
+    `L${ax - RADIUS * dir},${ey}`,
+    `Q${ax},${ey} ${ax},${ey + RADIUS}`,
+    `L${ax},${ay}`,
+  ].join(" ");
+}
+
+const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 export function Hero() {
+  const stageRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const baselineRef = useRef<HTMLSpanElement>(null);
+  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [geo, setGeo] = useState<Geometry | null>(null);
+  const [hovered, setHovered] = useState<number | null>(null);
+
+  const measure = useCallback(() => {
+    const stage = stageRef.current;
+    const title = titleRef.current;
+    const baseline = baselineRef.current;
+    if (!stage || !title || !baseline) return;
+
+    /* Below sm the leads would tangle; the labels drop to a plain row instead. */
+    if (!window.matchMedia("(min-width: 640px)").matches) {
+      setGeo(null);
+      return;
+    }
+
+    /*
+     * offset* rather than getBoundingClientRect: the letters are mid-entrance
+     * (translated and scaled) on first measure, and offsets ignore transforms.
+     * The stage is the offsetParent of everything measured here.
+     */
+    const width = stage.clientWidth;
+    const titleTop = title.offsetTop;
+    const base = baseline.offsetTop;
+    const em = parseFloat(getComputedStyle(title).fontSize);
+
+    const pills: Geometry["pills"] = [];
+    const paths: string[] = [];
+    const dots: Geometry["dots"] = [];
+
+    wires.forEach((wire, i) => {
+      const el = letterRefs.current[wire.letter];
+      if (!el) return;
+      const ax = el.offsetLeft + el.offsetWidth * wire.fx;
+      const ay = base - em * wire.fy;
+      const wanted = Math.min(Math.max(ax + wire.dx, 60), width - 60);
+      /* A lead that barely moves sideways drops straight, so centre the pill over it. */
+      const px = Math.abs(wanted - ax) < RADIUS * 2 ? ax : wanted;
+      const py = ROW_TOP[wire.row];
+      /* Staggered elbows so no two leads share a horizontal run. */
+      const ey = titleTop + em * 0.08 - 14 - i * 9;
+
+      pills.push({ x: px, y: py });
+      paths.push(leadPath(px, py + PILL_H, ey, ax, ay));
+      dots.push({ x: ax, y: ay });
+    });
+
+    setGeo({ pills, paths, dots });
+  }, []);
+
+  useIsoLayoutEffect(() => {
+    measure();
+    const stage = stageRef.current;
+    if (!stage) return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(stage);
+    /* Outfit swaps in after first paint and changes every letter's width. */
+    document.fonts?.ready.then(measure);
+    return () => observer.disconnect();
+  }, [measure]);
+
   return (
     <section className="relative overflow-hidden">
-      {/* Accent bloom behind the portrait, keeps the right side from going flat. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute right-0 top-0 -z-10 hidden size-[42rem] translate-x-1/4 -translate-y-1/4 rounded-full xl:block"
-        style={{ background: "radial-gradient(circle, var(--accent-wash), transparent 65%)" }}
-      />
-
-      <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 xl:py-20">
-        <div className="flex flex-col items-center justify-between gap-14 xl:flex-row xl:gap-10">
-          {/* Portrait first on mobile, second on desktop — same as the model. */}
-          <div className="order-1 xl:order-2">
-            <Reveal>
-              <AvatarRing />
-            </Reveal>
-          </div>
-
-          <div className="order-2 w-full text-center xl:order-1 xl:text-left">
-            <Reveal delay={60}>
-              {/*
-                The discipline leads, not a greeting. The name still sits inside the
-                h1 so a search for it still matches the top-level heading — it just
-                doesn't get the largest type on the page.
-              */}
-              <h1 className="tracking-tight">
-                {/*
-                  Name in the warm accent at about three quarters of the headline
-                  size — big enough to carry the top of the page on its own, still
-                  clearly subordinate to the headline beneath it. The title stays
-                  small so the pairing keeps an obvious hierarchy, and at this size
-                  it wraps to its own line, which is why the separator is gone:
-                  a leading middot on a line of its own reads as a stray mark.
-                */}
-                <span className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1 xl:justify-start">
-                  <span className="text-[1.75rem] font-bold text-accent-warm sm:text-[2.1rem] xl:text-[2.45rem]">
-                    {profile.name}
-                  </span>
-                  <span className="text-[13px] text-ink-faint sm:text-[15px]">
-                    {profile.title}
-                  </span>
-                </span>
-
-                {/*
-                  Both headline lines share one hover group, so the accent wipe
-                  sweeps the whole phrase rather than just the second line —
-                  highlighting half a sentence read as a bug, not a flourish.
-                  Each line keeps its own overlay so the fill hugs the text
-                  instead of squaring off to the longest line, and the second is
-                  delayed slightly so the sweep travels down.
-                */}
-                <span className="group mt-3 block cursor-default">
-                  {headlineLines.map((line, i) => (
-                    <HeadlineLine
-                      key={line.text}
-                      accent={line.accent}
-                      /* Staggered so the sweep travels down the phrase. */
-                      delay={["", "delay-75", "delay-150"][i]}
-                    >
-                      {line.text}
-                    </HeadlineLine>
-                  ))}
-                </span>
-              </h1>
-            </Reveal>
-
-            <Reveal delay={120}>
-              {/*
-                Two hand-broken lines rather than one wrapping paragraph, so the
-                grouping is deliberate instead of whatever the column width
-                happens to produce.
-              */}
-              <div className="mt-7 text-[13.5px] leading-relaxed text-ink-soft sm:text-[15px]">
-                {profile.disciplineLines.map((line) => (
-                  <p key={line}>{line}</p>
+      <RippleGrid className="absolute inset-0 -z-10 size-full [mask-image:radial-gradient(ellipse_70%_75%_at_50%_40%,#000_35%,transparent_80%)]" />
+      <div className="mx-auto max-w-6xl px-5 pb-16 pt-10 sm:px-8 sm:pb-24 sm:pt-6">
+        <div ref={stageRef} className="relative mx-auto w-fit sm:pt-[150px]">
+          {geo && (
+            <>
+              <svg
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 z-10 hidden size-full overflow-visible sm:block"
+              >
+                {geo.paths.map((d, i) => (
+                  <path
+                    key={wires[i].label}
+                    d={d}
+                    pathLength={1}
+                    fill="none"
+                    strokeWidth={1.25}
+                    strokeDasharray={1}
+                    strokeDashoffset={1}
+                    className="transition-[stroke] duration-300"
+                    stroke={hovered === i ? "var(--ink)" : "var(--ink-faint)"}
+                    style={{ animation: `wire-draw 0.9s cubic-bezier(0.6,0,0.2,1) ${700 + i * 140}ms forwards` }}
+                  />
                 ))}
-                <p className="mt-2 flex items-center justify-center gap-1.5 text-ink-faint xl:justify-start">
-                  {/* Decorative — the text beside it already says the location. */}
-                  <span aria-hidden="true">📍</span>
-                  {profile.location}
-                </p>
-              </div>
-            </Reveal>
+                {geo.dots.map((dot, i) => (
+                  <circle
+                    key={wires[i].label}
+                    cx={dot.x}
+                    cy={dot.y}
+                    r={hovered === i ? 5.5 : 4.5}
+                    fill="var(--ink)"
+                    stroke="var(--bg)"
+                    strokeWidth={2}
+                    className="transition-[r] duration-300"
+                    style={{ opacity: 0, animation: `fade-in 0.4s ease-out ${1400 + i * 140}ms forwards` }}
+                  />
+                ))}
+              </svg>
 
-            <Reveal delay={180}>
-              <div className="mt-9 flex flex-col items-center gap-7 xl:flex-row xl:gap-8">
-                {profile.assets.hasCv ? (
-                  <a
-                    href={profile.cv}
-                    className="neon-outline group flex h-14 items-center justify-center gap-2 rounded-full px-8 text-sm font-semibold uppercase tracking-[2px]"
-                  >
-                    View CV
-                    <Chevron />
-                  </a>
-                ) : (
-                  <a
-                    href={`mailto:${profile.contact.email}`}
-                    className="neon-outline group flex h-14 items-center justify-center gap-2 rounded-full px-8 text-sm font-semibold uppercase tracking-[2px]"
-                  >
-                    Get in touch
-                    <Chevron />
-                  </a>
-                )}
+              {geo.pills.map((pill, i) => (
+                <Link
+                  key={wires[i].label}
+                  href={wires[i].href}
+                  onMouseEnter={() => setHovered(i)}
+                  onMouseLeave={() => setHovered(null)}
+                  onFocus={() => setHovered(i)}
+                  onBlur={() => setHovered(null)}
+                  className="pill absolute z-20 hidden -translate-x-1/2 bg-bg px-3 uppercase tracking-[0.14em] text-ink-soft transition-colors hover:border-ink hover:text-ink sm:inline-flex"
+                  style={{
+                    left: pill.x,
+                    top: pill.y,
+                    height: PILL_H,
+                    opacity: 0,
+                    animation: `fade-in 0.5s ease-out ${500 + i * 140}ms forwards`,
+                  }}
+                >
+                  {wires[i].label}
+                </Link>
+              ))}
+            </>
+          )}
 
-                <ul className="flex gap-5">
-                  {socials.map(({ label, href, icon: Icon }) => (
-                    <li key={label}>
-                      <a
-                        href={href}
-                        target={href.startsWith("http") ? "_blank" : undefined}
-                        rel={href.startsWith("http") ? "noreferrer" : undefined}
-                        aria-label={label}
-                        className="neon-outline flex size-9 items-center justify-center rounded-full"
-                      >
-                        <Icon />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
+          <h1
+            ref={titleRef}
+            className="select-none font-display text-[clamp(5.2rem,24vw,8rem)] font-extrabold leading-[0.85] tracking-[-0.045em] sm:text-[clamp(8rem,19vw,14.5rem)]"
+          >
+            <span className="sr-only">
+              {profile.name}, {profile.title}
+            </span>
+            <span aria-hidden="true">
+              {wordmark.map((letter, i) => {
+                const lifted = hovered !== null && wires[hovered].letter === i;
+                return (
+                  <span
+                    key={i}
+                    ref={(node) => {
+                      letterRefs.current[i] = node;
+                    }}
+                    className={`inline-block ${toneText[letter.tone]}`}
+                    style={{ opacity: 0, animation: `letter-rise 0.8s cubic-bezier(0.2,0.8,0.2,1) ${i * 70}ms forwards` }}
+                  >
+                    <span
+                      className="inline-block transition-transform duration-300 ease-out"
+                      style={{ transform: lifted ? "translateY(-0.06em)" : undefined }}
+                    >
+                      {letter.char}
+                    </span>
+                  </span>
+                );
+              })}
+              <span
+                ref={baselineRef}
+                className="inline-block h-0 w-0 align-baseline"
+              />
+            </span>
+          </h1>
+        </div>
+
+        {/* Labels without leads, for phones. */}
+        <ul className="mt-6 flex flex-wrap justify-center gap-2 sm:hidden">
+          {wires.map((wire) => (
+            <li key={wire.label}>
+              <Link href={wire.href} className="pill h-8 px-3.5 uppercase tracking-[0.14em] text-ink-soft">
+                {wire.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <div
+          className="mx-auto mt-10 max-w-2xl text-center sm:mt-12"
+          style={{ opacity: 0, animation: "fade-in 0.8s ease-out 500ms forwards" }}
+        >
+          <p className="font-display text-[1.2rem] font-medium leading-snug text-ink sm:text-[1.6rem]">
+            {profile.tagline}
+          </p>
+
+          {profile.availability.open && (
+            <p className="mt-5 inline-flex items-center gap-2 font-mono text-[12px] text-ink-soft">
+              <span className="size-2 rounded-full bg-live shadow-[0_0_0_3px_rgba(61,220,132,0.18),0_0_10px_rgba(61,220,132,0.6)]" />
+              {profile.availability.detail}
+            </p>
+          )}
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a href={`mailto:${profile.contact.email}`} className="btn h-11 px-6 text-sm">
+              Get in touch
+            </a>
+            {profile.cvUrl && (
+              <a href={profile.cvUrl} target="_blank" rel="noreferrer" className="btn-ghost h-11 gap-2 px-5 text-sm">
+                View CV
+                <span aria-hidden="true">↗</span>
+              </a>
+            )}
+            <a
+              href={profile.contact.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-ghost h-11 px-5 text-sm"
+            >
+              LinkedIn
+            </a>
+            <a
+              href={profile.contact.github}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-ghost h-11 px-5 text-sm"
+            >
+              GitHub
+            </a>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-/**
- * One line of the headline, with an accent panel that wipes in from the left on
- * hover of the shared parent group. On hover both lines flip to the dark
- * accent ink — white on cyan would be unreadable.
- */
-/*
- * At 3.2rem the longest headline line (17 monospace characters) needs about
- * 523px against a ~648px column with the portrait at 400px. Mobile is capped at
- * 1.75rem for the same reason. Change `headlineLines` in content/profile.ts and
- * this arithmetic needs redoing.
- */
-function HeadlineLine({
-  children,
-  accent,
-  delay = "",
-}: {
-  children: React.ReactNode;
-  accent?: boolean;
-  delay?: string;
-}) {
-  return (
-    <span className="relative inline-block overflow-hidden align-top">
-      <span
-        className={`relative z-10 block px-1 text-[1.75rem] font-bold leading-[1.08] transition-colors duration-500 group-hover:text-accent-ink sm:text-[2.6rem] xl:text-[3.2rem] ${
-          accent ? "text-accent" : "text-ink"
-        }`}
-      >
-        {children}
-      </span>
-      <span
-        aria-hidden="true"
-        className={`absolute inset-0 z-0 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100 ${delay}`}
-      />
-    </span>
-  );
-}
-
-function Chevron() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="size-4 transition-transform duration-200 group-hover:translate-x-1"
-      aria-hidden="true"
-    >
-      <path d="m9 18 6-6-6-6" />
-    </svg>
-  );
-}
-
-/* Inline icons — no icon package, keeps the bundle to what is actually used. */
-
-function LinkedInIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
-      <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.76-1.95C20.6 8.75 21 11.1 21 14.1V21h-4v-6.1c0-1.45-.03-3.32-2.05-3.32-2.05 0-2.37 1.58-2.37 3.21V21H9z" />
-    </svg>
-  );
-}
-
-function GitHubIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
-      <path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.26 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z" />
-    </svg>
-  );
-}
-
-function MailIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      className="size-4"
-      aria-hidden="true"
-    >
-      <rect x="2.5" y="4.5" width="19" height="15" rx="2" />
-      <path d="m3 6 9 6.5L21 6" />
-    </svg>
   );
 }

@@ -86,3 +86,27 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
 ];
+
+/*
+ * The scrolling band under the hero stats. Short names only: it is decoration,
+ * and the full, grouped list is the Skills section above.
+ */
+export const marqueeRows = [
+  [
+    "Microsoft 365",
+    "Intune",
+    "Entra ID",
+    "Conditional Access",
+    "Autopilot",
+    "Exchange Online",
+    "SharePoint",
+    "Active Directory",
+    "PowerShell",
+    "Microsoft Graph",
+    "CrowdStrike Falcon",
+    "Defender",
+    "Purview",
+    /* Keeps the count even, so solid and muted still alternate across the seam. */
+    "Teams",
+  ],
+];
