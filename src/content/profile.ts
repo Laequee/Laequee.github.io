@@ -91,8 +91,14 @@ export const profile = {
 
   contact: {
     email: "laequeofficial@gmail.com",
+    /*
+     * Hidden by choice (2026-11-03): a published number draws spam and scrapers,
+     * and email and LinkedIn are enough for a first contact. Flip `showPhone`
+     * to put it back in the hero, contact section and footer.
+     */
     phone: "+971 56 655 0852",
     phoneHref: "tel:+971566550852",
+    showPhone: false,
     linkedin: "https://www.linkedin.com/in/laeque/",
     linkedinLabel: "linkedin.com/in/laeque",
     github: "https://github.com/laequee",

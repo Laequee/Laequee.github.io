@@ -19,7 +19,7 @@ The site is live and public. A push to `main` deploys it. There is no staging.
 - `src/app/` — routes. `page.tsx` (home), `projects/[slug]/page.tsx`, `layout.tsx`,
   `not-found.tsx`, `globals.css`.
 - `src/content/` — **all copy and data** live here as typed TS modules (`projects.ts`,
-  `experience.ts`, `skills.ts`, `courses.ts`, `principles.ts`, `profile.ts`).
+  `experience.ts`, `skills.ts`, `courses.ts`, `profile.ts`).
   Wording, metrics, and ordering changes belong in this directory, not in components.
 - `src/components/` — presentational only, grouped by area (`home/`, `project/`,
   `blueprint/`) with shared pieces at the top level.

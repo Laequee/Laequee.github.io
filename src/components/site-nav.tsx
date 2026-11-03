@@ -11,7 +11,6 @@ const links = [
   /* Anchor stays #work — renaming it would break links already shared. */
   { href: "/#work", label: "Projects" },
   { href: "/#experience", label: "Experience" },
-  { href: "/#principles", label: "Principles" },
   { href: "/#stack", label: "Skills" },
   { href: "/#contact", label: "Contact" },
 ];

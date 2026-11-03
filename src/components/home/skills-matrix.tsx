@@ -5,16 +5,16 @@ import { skillGroups } from "@/content/skills";
 export function SkillsMatrix() {
   return (
     <Section
-      index="04"
+      index="03"
       /*
         Anchor stays #stack. It is already in the nav and in shared links, and
         the heading it points at is the only thing that changed.
       */
       id="stack"
       title="Skills"
-      lede="Twelve domains, ordered by how much of the work sits in each."
+      lede="The tools I use every week, Microsoft 365 first."
     >
-      <div className="grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-3">
         {skillGroups.map((group, i) => (
           <Reveal key={group.code} delay={Math.min(i, 4) * 50} className="bg-bg">
             <div className="h-full px-5 py-6">

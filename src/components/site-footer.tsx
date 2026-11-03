@@ -65,12 +65,14 @@ export function SiteFooter() {
             >
               {profile.contact.email}
             </a>
-            <a
-              href={profile.contact.phoneHref}
-              className="sweep w-fit text-sm text-ink-soft transition-colors hover:text-ink"
-            >
-              {profile.contact.phone}
-            </a>
+            {profile.contact.showPhone && (
+              <a
+                href={profile.contact.phoneHref}
+                className="sweep w-fit text-sm text-ink-soft transition-colors hover:text-ink"
+              >
+                {profile.contact.phone}
+              </a>
+            )}
           </div>
         </div>
 

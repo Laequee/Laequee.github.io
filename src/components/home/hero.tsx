@@ -6,7 +6,6 @@ const socials = [
   { label: "LinkedIn", href: profile.contact.linkedin, icon: LinkedInIcon },
   { label: "GitHub", href: profile.contact.github, icon: GitHubIcon },
   { label: "Email", href: `mailto:${profile.contact.email}`, icon: MailIcon },
-  { label: "Phone", href: profile.contact.phoneHref, icon: PhoneIcon },
 ];
 
 
@@ -223,14 +222,6 @@ function MailIcon() {
     >
       <rect x="2.5" y="4.5" width="19" height="15" rx="2" />
       <path d="m3 6 9 6.5L21 6" />
-    </svg>
-  );
-}
-
-function PhoneIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
-      <path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.12.37 2.33.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.6a1 1 0 0 1-.25 1z" />
     </svg>
   );
 }

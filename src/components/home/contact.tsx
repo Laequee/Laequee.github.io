@@ -6,7 +6,7 @@ import { profile } from "@/content/profile";
 export function Contact() {
   return (
     <Section
-      index="07"
+      index="05"
       id="contact"
       title="Get in touch"
       lede={
@@ -24,11 +24,13 @@ export function Contact() {
               value={profile.contact.email}
               href={`mailto:${profile.contact.email}`}
             />
-            <CopyField
-              label="Phone"
-              value={profile.contact.phone}
-              href={profile.contact.phoneHref}
-            />
+            {profile.contact.showPhone && (
+              <CopyField
+                label="Phone"
+                value={profile.contact.phone}
+                href={profile.contact.phoneHref}
+              />
+            )}
             <CopyField
               label="LinkedIn"
               value={profile.contact.linkedinLabel}

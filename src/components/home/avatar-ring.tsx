@@ -19,7 +19,6 @@ export function AvatarRing() {
   const [flips, setFlips] = useState(0);
   // Which avatar each of the two faces is currently showing.
   const [faces, setFaces] = useState<[number, number]>([0, 1]);
-  const [touched, setTouched] = useState(false);
 
   const frontVisible = flips % 2 === 0;
 
@@ -29,7 +28,6 @@ export function AvatarRing() {
     // Load the next image onto the hidden face, then rotate to it.
     setFaces(frontVisible ? [faces[0], next] : [next, faces[1]]);
     setFlips((f) => f + 1);
-    setTouched(true);
   }
 
   const current = avatars[frontVisible ? faces[0] : faces[1]];
@@ -73,16 +71,6 @@ export function AvatarRing() {
           </div>
         </button>
       </div>
-
-      {/* Fades out once the switcher has been discovered. */}
-      <span
-        aria-hidden="true"
-        className={`pointer-events-none text-[11px] uppercase tracking-[0.16em] text-accent transition-opacity duration-500 ${
-          touched ? "opacity-0" : "opacity-100"
-        }`}
-      >
-        click me 👀
-      </span>
     </div>
   );
 }

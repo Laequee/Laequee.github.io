@@ -14,8 +14,8 @@ export function Work() {
     <Section
       index="01"
       id="work"
-      title="Enterprise Projects"
-      lede="Enterprise engineering projects spanning cloud identity, endpoint management, infrastructure modernisation, security, automation, and large-scale migration initiatives."
+      title="Selected Work"
+      lede="Four projects from a 5,000-user Microsoft 365 estate: endpoint management, migration, directory and endpoint security."
     >
       <ul className="border-t border-rule">
         {projects.map((project, i) => {
@@ -102,7 +102,7 @@ export function Work() {
                     </dl>
                   )}
                   <JellyPill className="jelly-cta mt-5 inline-flex items-center gap-2.5 whitespace-nowrap rounded-full px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em]">
-                    View full case study
+                    Read the case study
                     <span
                       aria-hidden="true"
                       className="transition-transform duration-300 group-hover:translate-x-1"

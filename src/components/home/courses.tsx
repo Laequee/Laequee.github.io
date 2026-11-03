@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/blueprint/reveal";
 import { Section } from "@/components/blueprint/rules";
 import { courses } from "@/content/courses";
+import { profile } from "@/content/profile";
 
 /*
  * Headed "Courses & Training", not "Certifications" — see the note at the top
@@ -10,10 +11,10 @@ import { courses } from "@/content/courses";
 export function Courses() {
   return (
     <Section
-      index="05"
+      index="04"
       id="certifications"
-      title="Courses & Training"
-      lede="Microsoft, Cisco, and platform course tracks completed."
+      title="Training & Education"
+      lede={`Courses completed. ${profile.education.degree}, ${profile.education.institution} (2020). Languages: ${profile.languages.map((l) => l.name).join(", ")}.`}
       raised
     >
       <ul className="grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">

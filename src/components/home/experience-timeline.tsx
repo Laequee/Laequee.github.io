@@ -61,6 +61,7 @@ export function ExperienceTimeline() {
               </p>
 
               {/* Two columns on wide screens — eleven stacked bullets reads as a wall. */}
+              {role.highlights.length > 0 && (
               <ul className="mt-4 grid max-w-4xl gap-x-10 gap-y-2 lg:grid-cols-2">
                 {role.highlights.map((highlight) => (
                   <li key={highlight} className="flex gap-3 text-[14px] leading-relaxed text-ink-soft">
@@ -69,6 +70,7 @@ export function ExperienceTimeline() {
                   </li>
                 ))}
               </ul>
+              )}
 
               {role.note && (
                 <p className="annot mt-4 max-w-2xl normal-case leading-relaxed tracking-[0.04em]">
