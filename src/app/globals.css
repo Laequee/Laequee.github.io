@@ -274,6 +274,13 @@
   @media (hover: none) {
     stroke-dashoffset: 0;
     opacity: 1;
+    /* On a phone the card rises in first (rise-in), then the stroke draws. */
+    transition-delay: 0.35s;
+
+    [data-drawn="false"] & {
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
   }
 }
 
@@ -295,5 +302,27 @@
   @media (hover: none) {
     opacity: 1;
     translate: 0 0;
+    transition-delay: calc(var(--note-delay, 0ms) + 0.6s);
+
+    [data-drawn="false"] & {
+      opacity: 0;
+      translate: 0 6px;
+    }
+  }
+}
+
+/*
+  Phone-only entrance for the project cards: DrawOnView (touchOnly) holds the
+  wrapper at data-drawn="false" until it scrolls in. Without JS, with a mouse
+  or with reduced motion the attribute is never "false", so the card just shows.
+*/
+@utility rise-in {
+  transition:
+    opacity 0.7s ease-out,
+    translate 0.8s cubic-bezier(0.2, 0.75, 0.15, 1);
+
+  &[data-drawn="false"] {
+    opacity: 0;
+    translate: 0 48px;
   }
 }
